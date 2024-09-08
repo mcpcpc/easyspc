@@ -218,7 +218,6 @@ class IMR(ChartBase):
 
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
-        d2 = abc_table[2].d2
         func = lambda i: abs(self.data[i] - self.data[i - 1])
         self.mr = list(map(func, range(1, len(self.data))))
         self.center_line_i = mean(self.data)
@@ -226,10 +225,10 @@ class IMR(ChartBase):
         self.upper_control_limit_i = self.center_line_i + (3 * stdev(self.data))
         self.lower_control_limit_i = self.center_line_i - (3 * stdev(self.data))
         self.upper_control_limit_mr = self.center_line_mr + (
-            3 * self.center_line_i / d2
+            3 * self.center_line_i / abc_table[2].d2
         )
         self.lower_control_limit_mr = self.center_line_mr - (
-            3 * self.center_line_i / d2
+            3 * self.center_line_i / abc_table[2].d2
         )
 
     def plot(self) -> dict:
