@@ -1,4 +1,4 @@
 include LICENSE
-include easyspc/plotly.json
+include easyspc/stacked.json
 graft tests
 global-exclude *.pyc
