@@ -226,8 +226,12 @@ class IMR(ChartBase):
         self.center_line_mr = mean(self.mr)
         self.upper_control_limit_i = self.center_line_i + (3 * stdev(self.data))
         self.lower_control_limit_i = self.center_line_i - (3 * stdev(self.data))
-        self.upper_control_limit_mr = self.center_line_mr + (3 * self.center_line_i / 1.128)
-        self.lower_control_limit_mr = self.center_line_mr - (3 * self.center_line_i / 1.128)
+        self.upper_control_limit_mr = self.center_line_mr + (
+            3 * self.center_line_i / 1.128
+        )
+        self.lower_control_limit_mr = self.center_line_mr - (
+            3 * self.center_line_i / 1.128
+        )
 
     def plot(self) -> dict:
         template = load_template("stacked.json")
