@@ -15,7 +15,7 @@ from easyspc.chart import XBarS
 class ChartTestCase(TestCase):
     def test_batched(self):
         iterable = list(range(6))
-        response = batched(iterable, n=2)
+        response = list(batched(iterable, n=2))
         self.assertEqual(len(response), 3)
 
     def test_batched_error(self):
