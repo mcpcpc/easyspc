@@ -49,7 +49,7 @@ class ChartBase:
 
     def summary(self) -> None:
         raise NotImplemented
- 
+
 
 class XBarR(ChartBase):
     """Xbar-R Chart.
