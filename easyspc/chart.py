@@ -101,6 +101,22 @@ class XBarR(ChartBase):
         D4 = abc_table[self.subgroup_size].D4
         return D4 * self.center_line_r
 
+    def cp(self, lsl: float, usl: float) -> float:
+        """Process capability ratio.""" 
+
+        d2 = abc_table[self.subgroup_size].d2
+        sigma = self.center_line_r / d2
+        return (usl - lsl) / (6 * sigma)
+
+    def cpk(self, lsl: float, usl: float) -> float:
+        """Process performance ratio."""
+
+        d2 = abc_table[self.subgroup_size].d2
+        sigma = self.center_line_r / d2
+        cpk_upper = (usl - self.x_bar) / (3 * sigma)
+        cpk_lower = (self.x_bar - lsl) / (3 * sigma)
+        return min((cpk_upper, cpk_lower))
+
     def plot(self) -> dict:
         template = self.get_template()
         template["data"][0]["x"] = list(range(len(self.x_bar)))
