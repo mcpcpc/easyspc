@@ -278,13 +278,13 @@ class IMR(ChartBase):
     def upper_control_limit_i(self) -> float:
         return self.center_line_i + (3 * stdev(self.x))
 
-    @propery
+    @property
     def lower_control_limit_mr(self) -> float:
         return self.center_line_mr - (
             3 * self.center_line_i / abc_table[2].d2
         )
 
-    @propery
+    @property
     def upper_control_limit_mr(self) -> float:
         return self.center_line_mr + (
             3 * self.center_line_i / abc_table[2].d2
