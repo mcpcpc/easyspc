@@ -11,7 +11,6 @@ Statistical Process Control is a methodology for monitoring, controlling, and im
 - **Control Charts:** Easily generate various control charts, including X-Bar, R, S, p, np, c, and u charts.
 - **Process Capability Analysis:** Compute capability indices like Cp, Cpk, Pp, and Ppk to assess process performance against specification limits.
 - **Outlier Detection:** Spot special cause variations and outliers using established statistical rules (e.g., Western Electric rules).
-- **Automated Alerts:** Receive automatic alerts when your process goes out of control.
 - **Data Integration:** Seamlessly integrate with pandas DataFrames for streamlined data handling and analysis.
 - **Customizable:** Tailor control limits, sampling sizes, and statistical rules to meet the specific needs of your process.
 
