@@ -65,10 +65,9 @@ class XBarR(ChartBase):
         self,
         data: list,
         subgroup_size: int = 5,
-        *args,
         **kwargs,
     ) -> None:
-        super().__init__(*args, **kwargs)
+        super().__init__(**kwargs)
         A2 = abc_table[subgroup_size].A2
         D3 = abc_table[subgroup_size].D3
         D4 = abc_table[subgroup_size].D4
@@ -144,10 +143,9 @@ class XBarS(ChartBase):
         self,
         data: list,
         subgroup_size: int = 9,
-        *args,
         **kwargs,
     ) -> None:
-        super().__init__(*args, **kwargs)
+        super().__init__(**kwargs)
         A3 = abc_table[subgroup_size].A3
         B3 = abc_table[subgroup_size].B3
         B4 = abc_table[subgroup_size].B4
@@ -220,8 +218,8 @@ class IMR(ChartBase):
 
     default_template_name = "stacked.json"
 
-    def __init__(self, data: list, *args, **kwargs) -> None:
-        super().__init__(*args, **kwargs)
+    def __init__(self, data: list, **kwargs) -> None:
+        super().__init__(**kwargs)
         func = lambda i: abs(data[i] - data[i - 1])
         self.x = data
         self.mr = list(map(func, range(1, len(data))))
