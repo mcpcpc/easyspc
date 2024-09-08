@@ -32,8 +32,20 @@ def load_template(name: str) -> dict:
 
 
 class ChartBase:
+    """Chart base representation."""
+
+    default_template_name = None
+
     def __init__(self, template = None) -> None:
         self.template = template
+
+    def get_template(self) -> dict:
+        """Get and/or return template."""
+
+        if not isinstance(self.template, dict):
+            name = self.default_template_name
+            self.template = load_template(name)
+        return self.template 
 
     def plot(self) -> dict:
         raise NotImplemented
@@ -53,6 +65,8 @@ class XBarR(ChartBase):
     can identify and correct instabilities in
     a process.
     """
+
+    default_template_name = "stacked.json"
 
     def __init__(
         self,
@@ -77,7 +91,7 @@ class XBarR(ChartBase):
         self.lower_control_limit_r = D3 * self.center_line_r
 
     def plot(self) -> dict:
-        template = load_template("stacked.json")
+        template = self.get_template()
         template["data"][0]["x"] = list(range(len(self.x_bar)))
         template["data"][0]["y"] = self.x_bar
         template["data"][1]["x"] = list(range(len(self.r)))
@@ -131,6 +145,8 @@ class XBarS(ChartBase):
     a process.
     """
 
+    default_template_name = "stacked.json"
+
     def __init__(
         self,
         data: list,
@@ -154,7 +170,7 @@ class XBarS(ChartBase):
         self.lower_control_limit_s = B3 * self.center_line_s
 
     def plot(self) -> dict:
-        template = load_template("stacked.json")
+        template = self.get_template()
         template["data"][0]["x"] = list(range(len(self.x_bar)))
         template["data"][0]["y"] = self.x_bar
         template["data"][1]["x"] = list(range(len(self.s)))
@@ -209,6 +225,8 @@ class IMR(ChartBase):
     process.
     """
 
+    default_template_name = "stacked.json"
+
     def __init__(
         self,
         data: list,
@@ -231,7 +249,7 @@ class IMR(ChartBase):
         )
 
     def plot(self) -> dict:
-        template = load_template("stacked.json")
+        template = self.get_template()
         template["data"][0]["x"] = list(range(1, len(self.x) + 1))
         template["data"][0]["y"] = self.x
         template["data"][1]["x"] = list(range(2, len(self.x) + 1))
