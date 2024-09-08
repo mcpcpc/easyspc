@@ -28,7 +28,7 @@ class ChartBase:
 
     default_template_name = None
 
-    def __init__(self, template = None) -> None:
+    def __init__(self, template=None) -> None:
         self.template = template
 
     def get_template(self) -> dict:
@@ -38,7 +38,7 @@ class ChartBase:
             name = self.default_template_name
             data = get_data(__name__, name)
             self.template = loads(data.decode())
-        return self.template 
+        return self.template
 
     def plot(self) -> dict:
         raise NotImplemented
@@ -220,12 +220,7 @@ class IMR(ChartBase):
 
     default_template_name = "stacked.json"
 
-    def __init__(
-        self,
-        data: list,
-        *args,
-        **kwargs
-    ) -> None:
+    def __init__(self, data: list, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         func = lambda i: abs(data[i] - data[i - 1])
         self.x = data
