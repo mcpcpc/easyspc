@@ -231,9 +231,9 @@ class IMR(ChartBase):
 
     def plot(self) -> dict:
         template = load_template("stacked.json")
-        template["data"][0]["x"] = list(range(1, len(x) + 1))
+        template["data"][0]["x"] = list(range(1, len(self.data) + 1))
         template["data"][0]["y"] = self.data
-        template["data"][1]["x"] = list(range(2, len(x) + 1))
+        template["data"][1]["x"] = list(range(2, len(self.data) + 1))
         template["data"][1]["y"] = self.mr
         template["layout"]["shapes"][0]["name"] = "CL"
         template["layout"]["shapes"][0]["y0"] = self.center_line_i
