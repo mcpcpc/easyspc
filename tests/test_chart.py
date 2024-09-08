@@ -42,13 +42,13 @@ class ChartTestCase(TestCase):
         self.assertIsInstance(response, dict)
 
     def test_x_bar_r(self):
-        x = list(range(9))
+        data = list(range(9))
         xbarr = XBarR(data=data, subgroup_size=3)
         response = xbarr.plot()
         self.assertIsInstance(response, dict)
 
     def test_x_bar_s(self):
-        x = list(range(9))
+        data = list(range(9))
         xbars = XBarS(data=data, subgroup_size=3)
         response = xbars.plot()
         self.assertIsInstance(response, dict)
