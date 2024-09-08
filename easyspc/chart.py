@@ -78,8 +78,8 @@ class XBarR(ChartBase):
         self.r = list(map(lambda v: max(v) - min(v), groups))
         self.center_line_x = mean(self.x_bar)
         self.center_line_r = mean(self.r)
-        self.upper_control_limit_x = self.center_line_x + (A2 * self.r_bar)
-        self.lower_control_limit_x = self.center_line_x - (A2 * self.r_bar)
+        self.upper_control_limit_x = self.center_line_x + (A2 * self.center_line_r)
+        self.lower_control_limit_x = self.center_line_x - (A2 * self.center_line_r)
         self.upper_control_limit_r = D4 * self.center_line_r
         self.lower_control_limit_r = D3 * self.center_line_r
 
