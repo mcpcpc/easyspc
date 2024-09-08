@@ -68,19 +68,38 @@ class XBarR(ChartBase):
         **kwargs,
     ) -> None:
         super().__init__(**kwargs)
-        A2 = abc_table[subgroup_size].A2
-        D3 = abc_table[subgroup_size].D3
-        D4 = abc_table[subgroup_size].D4
         groups = list(batched(data, n=subgroup_size))
         self.subgroup_size = subgroup_size
         self.x_bar = list(map(mean, groups))
         self.r = list(map(lambda v: max(v) - min(v), groups))
-        self.center_line_x = mean(self.x_bar)
-        self.center_line_r = mean(self.r)
-        self.upper_control_limit_x = self.center_line_x + (A2 * self.center_line_r)
-        self.lower_control_limit_x = self.center_line_x - (A2 * self.center_line_r)
-        self.upper_control_limit_r = D4 * self.center_line_r
-        self.lower_control_limit_r = D3 * self.center_line_r
+
+    @property
+    def center_line_x(self) -> float:
+        return mean(self.x_bar)
+
+    @property
+    def center_line_r(self) -> float:
+        return mean(self.r)
+
+    @property
+    def lower_control_limit_x(self) -> float:
+        A2 = abc_table[self.subgroup_size].A2
+        return self.center_line_x - (A2 * self.center_line_r)
+
+    @property
+    def upper_control_limit_x(self) -> float:
+        A2 = abc_table[self.subgroup_size].A2
+        return self.center_line_x + (A2 * self.center_line_r)
+
+    @property
+    def lower_control_limit_r(self) -> float:
+        D3 = abc_table[self.subgroup_size].D3
+        return D3 * self.center_line_r
+
+    @property
+    def upper_control_limit_r(self) -> float:
+        D4 = abc_table[self.subgroup_size].D4
+        return D4 * self.center_line_r
 
     def plot(self) -> dict:
         template = self.get_template()
@@ -146,19 +165,38 @@ class XBarS(ChartBase):
         **kwargs,
     ) -> None:
         super().__init__(**kwargs)
-        A3 = abc_table[subgroup_size].A3
-        B3 = abc_table[subgroup_size].B3
-        B4 = abc_table[subgroup_size].B4
         groups = list(batched(data, n=subgroup_size))
         self.subgroup_size = subgroup_size
         self.x_bar = list(map(mean, groups))
         self.s = list(map(stdev, groups))
-        self.center_line_x = mean(self.x_bar)
-        self.center_line_s = mean(self.s)
-        self.upper_control_limit_x = self.center_line_x + (A3 * self.center_line_s)
-        self.lower_control_limit_x = self.center_line_x - (A3 * self.center_line_s)
-        self.upper_control_limit_s = B4 * self.center_line_s
-        self.lower_control_limit_s = B3 * self.center_line_s
+
+    @property
+    def center_line_x(self) -> float:
+        return mean(self.x_bar)
+
+    @property
+    def center_line_s(self) -> float:
+        return mean(self.s)
+
+    @property
+    def lower_control_limit_x(self) -> float:
+        A3 = abc_table[self.subgroup_size].A3
+        return self.center_line_x - (A3 * self.center_line_s)
+
+    @property
+    def upper_control_limit_x(self) -> float:
+        A3 = abc_table[self.subgroup_size].A3
+        return self.center_line_x + (A3 * self.center_line_s)
+
+    @property
+    def lower_control_limit_s(self) -> float:
+        B3 = abc_table[self.subgroup_size].B3
+        return B3 * self.center_line_s
+
+    @property
+    def upper_control_limit_s(self) -> float:
+        B4 = abc_table[self.subgroup_size].B4
+        return B4 * self.center_line_s
 
     def plot(self) -> dict:
         template = self.get_template()
@@ -221,24 +259,42 @@ class IMR(ChartBase):
     def __init__(self, data: list, **kwargs) -> None:
         super().__init__(**kwargs)
         func = lambda i: abs(data[i] - data[i - 1])
-        self.x = data
+        self.i = data
         self.mr = list(map(func, range(1, len(data))))
-        self.center_line_i = mean(data)
-        self.center_line_mr = mean(self.mr)
-        self.upper_control_limit_i = self.center_line_i + (3 * stdev(data))
-        self.lower_control_limit_i = self.center_line_i - (3 * stdev(data))
-        self.upper_control_limit_mr = self.center_line_mr + (
+
+    @property
+    def center_line_i(self) -> float:
+        return mean(self.i)
+
+    @property
+    def center_line_mr(self) -> float:
+        return mean(self.mr)
+
+    @property
+    def lower_control_limit_i(self) -> float:
+        return self.center_line_i - (3 * stdev(self.x))
+
+    @property
+    def upper_control_limit_i(self) -> float:
+        return self.center_line_i + (3 * stdev(self.x))
+
+    @propery
+    def lower_control_limit_mr(self) -> float:
+        return self.center_line_mr - (
             3 * self.center_line_i / abc_table[2].d2
         )
-        self.lower_control_limit_mr = self.center_line_mr - (
+
+    @propery
+    def upper_control_limit_mr(self) -> float:
+        return self.center_line_mr + (
             3 * self.center_line_i / abc_table[2].d2
         )
 
     def plot(self) -> dict:
         template = self.get_template()
-        template["data"][0]["x"] = list(range(1, len(self.x) + 1))
-        template["data"][0]["y"] = self.x
-        template["data"][1]["x"] = list(range(2, len(self.x) + 1))
+        template["data"][0]["x"] = list(range(1, len(self.i) + 1))
+        template["data"][0]["y"] = self.i
+        template["data"][1]["x"] = list(range(2, len(self.i) + 1))
         template["data"][1]["y"] = self.mr
         template["layout"]["shapes"][0]["name"] = "CL"
         template["layout"]["shapes"][0]["y0"] = self.center_line_i
