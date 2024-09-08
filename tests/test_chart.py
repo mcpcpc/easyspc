@@ -20,7 +20,8 @@ class ChartTestCase(TestCase):
 
     def test_batched_error(self):
         iterable = list(range(6))
-        with self.assertRaises(ValueError):
+        msg = "n is less than 1"
+        with self.assertRaises(ValueError, msg=msg):
             batched(iterable, n=0)
 
     @patch("easyspc.chart.get_data")
