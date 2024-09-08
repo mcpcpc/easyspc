@@ -25,26 +25,26 @@ class ChartTestCase(TestCase):
         get_data_mock.assert_called_once()
 
     @patch("easyspc.chart.get_data")
-    def test_load_template_error(self, get_data_mock):
+    def test_load_template_err(self, get_data_mock):
         get_data_mock.return_value = None
         with self.assertRaises(Exception):
             load_template("test")
 
     def test_i_mr(self):
         data = list(range(3))
-        imr = IMR(data=data)
+        imr = IMR(data)
         response = imr.plot()
         self.assertIsInstance(response, dict)
 
     def test_x_bar_r(self):
         data = list(range(9))
-        xbarr = XBarR(subgroup_size=3, data=data)
+        xbarr = XBarR(data, subgroup_size=3)
         response = xbarr.plot()
         self.assertIsInstance(response, dict)
 
     def test_x_bar_s(self):
         data = list(range(9))
-        xbars = XBarS(subgroup_size=3, data=data)
+        xbars = XBarS(data, subgroup_size=3)
         response = xbars.plot()
         self.assertIsInstance(response, dict)
 

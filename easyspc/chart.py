@@ -38,11 +38,8 @@ def load_template(name: str) -> dict:
 
 
 class ChartBase:
-    def __init__(self, data: list) -> None:
-        self.data = data
-
-    def _batch_data(self, n: int) -> list:
-        return list(batched(self.data, n))
+    def __init__(self, template = None) -> None:
+        self.template = template
 
     def plot(self) -> dict:
         raise NotImplemented
@@ -65,6 +62,7 @@ class XBarR(ChartBase):
 
     def __init__(
         self,
+        data: list,
         subgroup_size: int = 5,
         *args,
         **kwargs,
@@ -74,7 +72,7 @@ class XBarR(ChartBase):
         A2 = abc_table[self.subgroup_size].A2
         D3 = abc_table[self.subgroup_size].D3
         D4 = abc_table[self.subgroup_size].D4
-        groups = self._batch_data(self.subgroup_size)
+        groups = batched(data, self.subgroup_size)
         self.x_bar = list(map(mean, groups))
         self.r = list(map(lambda v: max(v) - min(v), groups))
         self.center_line_x = mean(self.x_bar)
@@ -141,7 +139,8 @@ class XBarS(ChartBase):
 
     def __init__(
         self,
-        subgroup_size: int = 5,
+        data: list,
+        subgroup_size: int = 9,
         *args,
         **kwargs,
     ) -> None:
@@ -150,7 +149,7 @@ class XBarS(ChartBase):
         A3 = abc_table[self.subgroup_size].A3
         B3 = abc_table[self.subgroup_size].B3
         B4 = abc_table[self.subgroup_size].B4
-        groups = self._batch_data(self.subgroup_size)
+        groups = batched(data, self.subgroup_size)
         self.x_bar = list(map(mean, groups))
         self.s = list(map(stdev, groups))
         self.center_line_x = mean(self.x_bar)
@@ -216,14 +215,20 @@ class IMR(ChartBase):
     process.
     """
 
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(
+        self,
+        data: list,
+        *args,
+        **kwargs
+    ) -> None:
         super().__init__(*args, **kwargs)
-        func = lambda i: abs(self.data[i] - self.data[i - 1])
-        self.mr = list(map(func, range(1, len(self.data))))
-        self.center_line_i = mean(self.data)
+        func = lambda i: abs(data[i] - data[i - 1])
+        self.x = data
+        self.mr = list(map(func, range(1, len(data))))
+        self.center_line_i = mean(data)
         self.center_line_mr = mean(self.mr)
-        self.upper_control_limit_i = self.center_line_i + (3 * stdev(self.data))
-        self.lower_control_limit_i = self.center_line_i - (3 * stdev(self.data))
+        self.upper_control_limit_i = self.center_line_i + (3 * stdev(data))
+        self.lower_control_limit_i = self.center_line_i - (3 * stdev(data))
         self.upper_control_limit_mr = self.center_line_mr + (
             3 * self.center_line_i / abc_table[2].d2
         )
@@ -233,9 +238,9 @@ class IMR(ChartBase):
 
     def plot(self) -> dict:
         template = load_template("stacked.json")
-        template["data"][0]["x"] = list(range(1, len(self.data) + 1))
-        template["data"][0]["y"] = self.data
-        template["data"][1]["x"] = list(range(2, len(self.data) + 1))
+        template["data"][0]["x"] = list(range(1, len(self.x) + 1))
+        template["data"][0]["y"] = self.x
+        template["data"][1]["x"] = list(range(2, len(self.x) + 1))
         template["data"][1]["y"] = self.mr
         template["layout"]["shapes"][0]["name"] = "CL"
         template["layout"]["shapes"][0]["y0"] = self.center_line_i
