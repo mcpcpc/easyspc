@@ -18,28 +18,6 @@
     }
   ],
   "layout": {
-    "annotations": [
-      {
-        "showarrow": false,
-        "text": null,
-        "x": 1,
-        "xanchor": "right",
-        "xref": "x domain",
-        "y": null,
-        "yanchor": "bottom",
-        "yref": "y"
-      },
-      {
-        "showarrow": false,
-        "text": null,
-        "x": 1,
-        "xanchor": "right",
-        "xref": "x2 domain",
-        "y": null,
-        "yanchor": "bottom",
-        "yref": "y2"
-      }
-    ],
     "shapes": [
       {
         "line": {
