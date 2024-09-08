@@ -66,7 +66,7 @@ class XBarR(ChartBase):
         A2 = abc_table[self.subgroup_size].A2
         D3 = abc_table[self.subgroup_size].D3
         D4 = abc_table[self.subgroup_size].D4
-        groups = batched(data, self.subgroup_size)
+        groups = batched(data, n=self.subgroup_size)
         self.x_bar = list(map(mean, groups))
         self.r = list(map(lambda v: max(v) - min(v), groups))
         self.center_line_x = mean(self.x_bar)
@@ -143,7 +143,7 @@ class XBarS(ChartBase):
         A3 = abc_table[self.subgroup_size].A3
         B3 = abc_table[self.subgroup_size].B3
         B4 = abc_table[self.subgroup_size].B4
-        groups = batched(data, self.subgroup_size)
+        groups = batched(data, n=self.subgroup_size)
         self.x_bar = list(map(mean, groups))
         self.s = list(map(stdev, groups))
         self.center_line_x = mean(self.x_bar)
