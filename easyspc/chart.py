@@ -154,8 +154,8 @@ class XBarS(ChartBase):
         self.s = list(map(stdev, groups))
         self.center_line_x = mean(self.x_bar)
         self.center_line_s = mean(self.s)
-        self.upper_control_limit_x = self.center_line_x + (A3 * self.s_bar)
-        self.lower_control_limit_x = self.center_line_x - (A3 * self.s_bar)
+        self.upper_control_limit_x = self.center_line_x + (A3 * self.center_line_s)
+        self.lower_control_limit_x = self.center_line_x - (A3 * self.center_line_s)
         self.upper_control_limit_s = B4 * self.center_line_s
         self.lower_control_limit_s = B3 * self.center_line_s
 
