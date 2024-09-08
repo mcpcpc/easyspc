@@ -6,7 +6,7 @@ from unittest import main
 from unittest.mock import patch
 
 from easyspc.chart import batched
-from easyspc.chart import load_template
+from easyspc.chart import ChartBase
 from easyspc.chart import IMR
 from easyspc.chart import XBarR
 from easyspc.chart import XBarS
@@ -19,9 +19,10 @@ class ChartTestCase(TestCase):
         self.assertEqual(len(response), 3)
 
     @patch("easyspc.chart.get_data")
-    def test_load_template(self, get_data_mock):
+    def test_chart_base_get_template(self, get_data_mock):
         get_data_mock.return_value = b"{}"
-        load_template("test")
+        base = ChartBase()
+        base.get_template()
         get_data_mock.assert_called_once()
 
     def test_i_mr(self):

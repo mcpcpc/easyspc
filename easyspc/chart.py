@@ -23,14 +23,6 @@ def batched(iterable, n: int):
         yield batch
 
 
-def load_template(name: str) -> dict:
-    """Load template resource."""
-
-    data = get_data(__name__, name)
-    template = loads(data.decode())
-    return template
-
-
 class ChartBase:
     """Chart base representation."""
 
@@ -44,7 +36,8 @@ class ChartBase:
 
         if not isinstance(self.template, dict):
             name = self.default_template_name
-            self.template = load_template(name)
+            data = get_data(__name__, name)
+            self.template = loads(data.decode())
         return self.template 
 
     def plot(self) -> dict:
