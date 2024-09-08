@@ -220,8 +220,8 @@ class IMR(ChartBase):
 
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
-        func = lambda v: abs(v[i] - v[i - 1])
-        self.mr = list(map(func, self.data))
+        func = lambda i: abs(self.data[i] - self.data[i - 1])
+        self.mr = list(map(func, range(1, len(self.data))))
         self.center_line_i = mean(self.data)
         self.center_line_mr = mean(self.mr)
         self.upper_control_limit_i = self.center_line_i + (3 * stdev(self.data))
