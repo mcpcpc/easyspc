@@ -198,6 +198,22 @@ class XBarS(ChartBase):
         B4 = abc_table[self.subgroup_size].B4
         return B4 * self.center_line_s
 
+    def cp(self, lsl: float, usl: float) -> float:
+        """Process capability ratio.""" 
+
+        C4 = abc_table[self.subgroup_size].C4
+        sigma = self.center_line_s / C4
+        return (usl - lsl) / (6 * sigma)
+
+    def cpk(self, lsl: float, usl: float) -> float:
+        """Process performance ratio."""
+
+        C4 = abc_table[self.subgroup_size].C4
+        sigma = self.center_line_s / C4
+        cpk_upper = (usl - self.x_bar) / (3 * sigma)
+        cpk_lower = (self.x_bar - lsl) / (3 * sigma)
+        return min((cpk_upper, cpk_lower))
+
     def plot(self) -> dict:
         template = self.get_template()
         template["data"][0]["x"] = list(range(len(self.x_bar)))
@@ -288,7 +304,7 @@ class IMR(ChartBase):
     def upper_control_limit_mr(self) -> float:
         return self.center_line_mr + (
             3 * self.center_line_i / abc_table[2].d2
-        )
+        ) 
 
     def plot(self) -> dict:
         template = self.get_template()
