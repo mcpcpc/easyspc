@@ -73,6 +73,9 @@ class XBarR(ChartBase):
     ) -> None:
         super().__init__(*args, **kwargs)
         self.subgroup_size = subgroup_size
+        A2 = abc_table[self.subgroup_size].A2
+        D3 = abc_table[self.subgroup_size].D3
+        D4 = abc_table[self.subgroup_size].D4
         groups = self._batch_data(self.subgroup_size)
         self.x_bar = list(map(mean, groups))
         self.r = list(map(lambda v: max(v) - min(v), groups))
