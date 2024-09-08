@@ -64,8 +64,6 @@ class XBarR(ChartBase):
     a process.
     """
 
-    template_name: str = "stacked.json"
-
     def __init__(
         *args,
         **kwargs,
@@ -84,7 +82,7 @@ class XBarR(ChartBase):
         self.lower_control_limit_r = D3 * self.center_line_r
 
     def plot(self) -> dict:
-        template = load_template(self.template_name)
+        template = load_template("stacked.json")
         template["data"][0]["x"] = list(range(len(self.x_bar)))
         template["data"][0]["y"] = self.x_bar
         template["data"][1]["x"] = list(range(len(self.r)))
@@ -138,8 +136,6 @@ class XBarS(ChartBase):
     a process.
     """
 
-    template_name: str = "stacked.json"
-
     def __init__(
         *args,
         **kwargs,
@@ -161,7 +157,7 @@ class XBarS(ChartBase):
         self.lower_control_limit_s = B3 * self.center_line_s
 
     def plot(self) -> dict:
-        template = load_template(self.template_name)
+        template = load_template("stacked.json")
         template["data"][0]["x"] = list(range(len(self.x_bar)))
         template["data"][0]["y"] = self.x_bar
         template["data"][1]["x"] = list(range(len(self.s)))
@@ -216,8 +212,6 @@ class IMR(ChartBase):
     process.
     """
 
-    template_name: str = "stacked.json"
-
     def __init__(*args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         func = lambda v: abs(v[i] - v[i - 1])
@@ -230,7 +224,7 @@ class IMR(ChartBase):
         self.lower_control_limit_mr = self.center_line_mr - (3 * self.center_line_i / 1.128)
 
     def plot(self) -> dict:
-        template = load_template(self.template_name)
+        template = load_template("stacked.json")
         template["data"][0]["x"] = list(range(1, len(x) + 1))
         template["data"][0]["y"] = self.data
         template["data"][1]["x"] = list(range(2, len(x) + 1))
