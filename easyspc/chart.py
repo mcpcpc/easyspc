@@ -272,11 +272,11 @@ class IMR(ChartBase):
 
     @property
     def lower_control_limit_i(self) -> float:
-        return self.center_line_i - (3 * stdev(self.x))
+        return self.center_line_i - (3 * stdev(self.i))
 
     @property
     def upper_control_limit_i(self) -> float:
-        return self.center_line_i + (3 * stdev(self.x))
+        return self.center_line_i + (3 * stdev(self.i))
 
     @property
     def lower_control_limit_mr(self) -> float:
