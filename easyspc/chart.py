@@ -65,9 +65,9 @@ class XBarR(ChartBase):
     """
 
     def __init__(
+        subgroup_size: int = 5,
         *args,
         **kwargs,
-        subgroup_size: int = 5,
     ) -> None:
         super().__init__(*args, **kwargs)
         self.subgroup_size = subgroup_size
@@ -137,9 +137,9 @@ class XBarS(ChartBase):
     """
 
     def __init__(
+        subgroup_size: int = 5,
         *args,
         **kwargs,
-        subgroup_size: int = 5,
     ) -> None:
         super().__init__(*args, **kwargs)
         self.subgroup_size = subgroup_size
