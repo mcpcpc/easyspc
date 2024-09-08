@@ -24,12 +24,6 @@ class ChartTestCase(TestCase):
         load_template("test")
         get_data_mock.assert_called_once()
 
-    @patch("easyspc.chart.get_data")
-    def test_load_template_err(self, get_data_mock):
-        get_data_mock.return_value = None
-        with self.assertRaises(Exception):
-            load_template("test")
-
     def test_i_mr(self):
         data = list(range(3))
         imr = IMR(data)

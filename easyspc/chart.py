@@ -16,11 +16,7 @@ from .const import abc_table
 
 
 def batched(iterable, n: int):
-    """
-    Batch data from the iterable into tuples of
-    length n. The last batch may be shorter
-    than n.
-    """
+    """Batch iterable by length n."""
 
     iterator = iter(iterable)
     while batch := tuple(islice(iterator, n)):
@@ -31,8 +27,6 @@ def load_template(name: str) -> dict:
     """Load template resource."""
 
     data = get_data(__name__, name)
-    if not isinstance(data, bytes):
-        raise Exception("Invalid template.")
     template = loads(data.decode())
     return template
 
