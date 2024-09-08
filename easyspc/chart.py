@@ -22,8 +22,6 @@ def batched(iterable, n: int):
     than n.
     """
 
-    if n < 1:
-        raise ValueError("n is less than 1")
     iterator = iter(iterable)
     while batch := tuple(islice(iterator, n)):
         yield batch

@@ -18,12 +18,6 @@ class ChartTestCase(TestCase):
         response = list(batched(iterable, n=2))
         self.assertEqual(len(response), 3)
 
-    def test_batched_error(self):
-        iterable = list(range(6))
-        msg = "n is less than 1"
-        with self.assertRaises(ValueError, msg=msg):
-            batched(iterable, n=0)
-
     @patch("easyspc.chart.get_data")
     def test_load_template(self, get_data_mock):
         get_data_mock.return_value = b"{}"
