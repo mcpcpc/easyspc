@@ -125,12 +125,11 @@ class XBarS(ChartBase):
         A3 = abc_table[self.subgroup_size].A3
         B3 = abc_table[self.subgroup_size].B3
         B4 = abc_table[self.subgroup_size].B4
-        samples = self._batch_data(self.subgroup_size)
-        self.s = list(map(stdev, samples))
-        self.x_bar = list(map(mean, groups))
-        self.s_bar = mean(self.s)
+        batches = self._batch_data(self.subgroup_size)
+        self.x_bar = list(map(mean, batches))
+        self.s = list(map(stdev, batches))
         self.center_line_x = mean(self.x_bar)
-        self.center_line_s = mean(self.s_bar)
+        self.center_line_s = mean(self.s)
         self.upper_control_limit_x = self.center_line_x + (A3 * self.s_bar)
         self.lower_control_limit_x = self.center_line_x - (A3 * self.s_bar)
         self.upper_control_limit_s = B4 * self.center_line_s
@@ -138,6 +137,36 @@ class XBarS(ChartBase):
 
     def plot(self) -> dict:
         template = load_template(self.template_name)
+        template["data"][0]["x"] = list(range(len(self.x_bar)))
+        template["data"][0]["y"] = self.x_bar
+        template["data"][1]["x"] = list(range(len(self.x_bar)))
+        template["data"][1]["y"] = self.s
+        template["layout"]["annotations"][0]["text"] = f"{self.center_line_x:.3f}"
+        template["layout"]["annotations"][0]["y"] = self.center_line_x
+        template["layout"]["annotations"][1]["text"] = f"{self.center_line_s:.3f}"
+        template["layout"]["annotations"][1]["y"] = self.center_line_s
+        template["layout"]["shapes"][0]["name"] = "CL"
+        template["layout"]["shapes"][0]["y0"] = self.center_line_x
+        template["layout"]["shapes"][0]["y1"] = self.center_line_x
+        template["layout"]["shapes"][1]["name"] = "LCL"
+        template["layout"]["shapes"][1]["y0"] = self.lower_control_limit_x
+        template["layout"]["shapes"][1]["y1"] = self.lower_control_limit_x
+        template["layout"]["shapes"][2]["name"] = "UCL"
+        template["layout"]["shapes"][2]["y0"] = self.upper_control_limit_x
+        template["layout"]["shapes"][2]["y1"] = self.upper_control_limit_x
+        template["layout"]["shapes"][3]["name"] = "SBar"
+        template["layout"]["shapes"][3]["y0"] = self.center_line_s
+        template["layout"]["shapes"][3]["y1"] = self.center_line_s
+        template["layout"]["shapes"][4]["name"] = "S_LCL"
+        template["layout"]["shapes"][4]["y0"] = self.lower_control_limit_s
+        template["layout"]["shapes"][4]["y1"] = self.lower_control_limit_s
+        template["layout"]["shapes"][5]["name"] = "S_UCL"
+        template["layout"]["shapes"][5]["y0"] = self.upper_control_limit_s
+        template["layout"]["shapes"][5]["y1"] = self.upper_control_limit_s
+        template["layout"]["xaxis"]["title"]["text"] = "Sample"
+        template["layout"]["xaxis2"]["title"]["text"] = "Sample"
+        template["layout"]["yaxis"]["title"]["text"] = "Sample Mean"
+        template["layout"]["yaxis2"]["title"]["text"] = "Sample StdDev"
         return template
 
     def summary(self) -> None:
@@ -189,7 +218,7 @@ class IMR(ChartBase):
         template["layout"]["annotations"][0]["y"] = self.center_line_i
         template["layout"]["annotations"][1]["text"] = f"{self.center_line_mr:.3f}"
         template["layout"]["annotations"][1]["y"] = self.center_line_mr
-        template["layout"]["shapes"][0]["name"] = "Center"
+        template["layout"]["shapes"][0]["name"] = "CL"
         template["layout"]["shapes"][0]["y0"] = self.center_line_i
         template["layout"]["shapes"][0]["y1"] = self.center_line_i
         template["layout"]["shapes"][1]["name"] = "LCL"
