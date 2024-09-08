@@ -66,6 +66,7 @@ class XBarR(ChartBase):
     """
 
     def __init__(
+        self,
         subgroup_size: int = 5,
         *args,
         **kwargs,
@@ -138,6 +139,7 @@ class XBarS(ChartBase):
     """
 
     def __init__(
+        self,
         subgroup_size: int = 5,
         *args,
         **kwargs,
@@ -213,7 +215,7 @@ class IMR(ChartBase):
     process.
     """
 
-    def __init__(*args, **kwargs) -> None:
+    def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         func = lambda v: abs(v[i] - v[i - 1])
         self.mr = list(map(func, self.data))
