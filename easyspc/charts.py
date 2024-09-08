@@ -181,6 +181,36 @@ class IMR(ChartBase):
 
     def plot(self) -> dict:
         template = load_template(self.template_name)
+        template["data"][0]["x"] = list(range(1, len(x) + 1))
+        template["data"][0]["y"] = self.data
+        template["data"][1]["x"] = list(range(2, len(x) + 1))
+        template["data"][1]["y"] = self.mr
+        template["layout"]["annotations"][0]["text"] = f"{self.center_line_i:.3f}"
+        template["layout"]["annotations"][0]["y"] = self.center_line_i
+        template["layout"]["annotations"][1]["text"] = f"{self.center_line_mr:.3f}"
+        template["layout"]["annotations"][1]["y"] = self.center_line_mr
+        template["layout"]["shapes"][0]["name"] = "Center"
+        template["layout"]["shapes"][0]["y0"] = self.center_line_i
+        template["layout"]["shapes"][0]["y1"] = self.center_line_i
+        template["layout"]["shapes"][1]["name"] = "LCL"
+        template["layout"]["shapes"][1]["y0"] = self.lower_control_limit_i
+        template["layout"]["shapes"][1]["y1"] = self.lower_control_limit_i
+        template["layout"]["shapes"][2]["name"] = "UCL"
+        template["layout"]["shapes"][2]["y0"] = self.upper_control_limit_i
+        template["layout"]["shapes"][2]["y1"] = self.upper_control_limit_i
+        template["layout"]["shapes"][3]["name"] = "MRBar"
+        template["layout"]["shapes"][3]["y0"] = self.center_line_mr
+        template["layout"]["shapes"][3]["y1"] = self.center_line_mr
+        template["layout"]["shapes"][4]["name"] = "MR_LCL"
+        template["layout"]["shapes"][4]["y0"] = self.upper_control_limit_mr
+        template["layout"]["shapes"][4]["y1"] = self.upper_control_limit_mr
+        template["layout"]["shapes"][5]["name"] = "MR_UCL"
+        template["layout"]["shapes"][5]["y0"] = self.upper_control_limit_mr
+        template["layout"]["shapes"][5]["y1"] = self.upper_control_limit_mr
+        template["layout"]["xaxis"]["title"]["text"] = "Observation"
+        template["layout"]["xaxis2"]["title"]["text"] = "Observation"
+        template["layout"]["yaxis"]["title"]["text"] = "Individual Value"
+        template["layout"]["yaxis2"]["title"]["text"] = "Moving Range"
         return template
 
     def summary(self) -> None:
