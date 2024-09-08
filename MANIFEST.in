@@ -1,0 +1,4 @@
+include LICENSE
+include easyspc/plotly.json
+graft tests
+global-exclude *.pyc
