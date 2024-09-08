@@ -6,6 +6,7 @@ SPDX-FileCopyrightText: 2024 Michael Czigler
 SPDX-License-Identifier: BSD-3-Clause
 """
 
+from itertools import islice
 from json import loads
 from pkgutil import get_data
 from statistics import mean
