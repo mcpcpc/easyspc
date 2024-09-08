@@ -218,8 +218,8 @@ class IMR(ChartBase):
         self.mr = list(map(func, self.data))
         self.center_line_i = mean(self.data)
         self.center_line_mr = mean(self.mr)
-        self.upper_control_limit_i = self.center_line_i + (3 * stdev(self.data)
-        self.lower_control_limit_i = self.center_line_i - (3 * stdev(self.data)
+        self.upper_control_limit_i = self.center_line_i + (3 * stdev(self.data))
+        self.lower_control_limit_i = self.center_line_i - (3 * stdev(self.data))
         self.upper_control_limit_mr = self.center_line_mr + (3 * self.center_line_i / 1.128)
         self.lower_control_limit_mr = self.center_line_mr - (3 * self.center_line_i / 1.128)
 
