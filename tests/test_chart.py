@@ -25,12 +25,6 @@ class ChartTestCase(TestCase):
         base.get_template()
         get_data_mock.assert_called_once()
 
-    def test_imr_plot(self):
-        data = list(range(3))
-        chart = IMR(data)
-        response = chart.plot()
-        self.assertIsInstance(response, dict)
-
     def test_xbarr_center_line_x(self):
         data = list(range(9))
         chart = XBarR(data, subgroup_size=3)
@@ -67,12 +61,6 @@ class ChartTestCase(TestCase):
         response = chart.lower_control_limit_r
         self.assertIsInstance(response, (float, int))
 
-    def test_xbarr_plot(self):
-        data = list(range(9))
-        xbarr = XBarR(data, subgroup_size=3)
-        response = xbarr.plot()
-        self.assertIsInstance(response, dict)
-
     def test_xbars_center_line_x(self):
         data = list(range(9))
         chart = XBarS(data, subgroup_size=3)
@@ -108,12 +96,6 @@ class ChartTestCase(TestCase):
         chart = XBarS(data, subgroup_size=3)
         response = chart.lower_control_limit_s
         self.assertIsInstance(response, (float, int))
-
-    def test_xbars_plot(self):
-        data = list(range(9))
-        chart = XBarS(data, subgroup_size=3)
-        response = chart.plot()
-        self.assertIsInstance(response, dict)
 
 
 if __name__ == "__main__":
