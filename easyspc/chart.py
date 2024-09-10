@@ -276,14 +276,16 @@ class IMR:
 
     @property
     def lower_control_limit_mr(self) -> float:
+        d2 = abc_table[2].d2
         return self.center_line_mr - (
-            3 * self.center_line_i / abc_table[2].d2
+            3 * self.center_line_i / d2
         )
 
     @property
     def upper_control_limit_mr(self) -> float:
+        d2 = abc_table[2].d2
         return self.center_line_mr + (
-            3 * self.center_line_i / abc_table[2].d2
+            3 * self.center_line_i / d2
         ) 
 
     def plot(self) -> Figure:
