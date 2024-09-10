@@ -132,7 +132,7 @@ class XBarR:
         print(f"Number of Subgroups: {len(self.r_bar)}")
 
 
-class XBarS(ChartBase):
+class XBarS:
     """XBar-S Chart.
 
     Use Xbar-S Chart to monitor the mean and
