@@ -4,13 +4,13 @@ description = "Easy statistical process controls library."
 readme = "README.md"
 requires-python = ">=3.11"
 license = {file = "LICENSE"}
+dependencies = ["plotly"]
 dynamic = ["version"]
 
 [project.urls]
 repository = "https://github.com/mcpcpc/easyspc"
 
 [project.optional-dependencies]
-plotly = ["plotly"]
 dev = ["coverage", "black"]
 
 [tool.setuptools.dynamic]

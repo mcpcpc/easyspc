@@ -7,10 +7,11 @@ SPDX-License-Identifier: BSD-3-Clause
 """
 
 from itertools import islice
-from json import loads
-from pkgutil import get_data
 from statistics import mean
 from statistics import stdev
+
+from plotly.graph_objects import Figure
+from plotly.subplots import make_subplots
 
 from .const import abc_table
 
@@ -23,31 +24,7 @@ def batched(iterable, n: int):
         yield batch
 
 
-class ChartBase:
-    """Chart base representation."""
-
-    default_template_name = None
-
-    def __init__(self, template=None) -> None:
-        self.template = template
-
-    def get_template(self) -> dict:
-        """Get and/or return template."""
-
-        if not isinstance(self.template, dict):
-            name = self.default_template_name
-            data = get_data(__name__, name)
-            self.template = loads(data.decode())
-        return self.template
-
-    def plot(self) -> dict:
-        raise NotImplemented
-
-    def summary(self) -> None:
-        raise NotImplemented
-
-
-class XBarR(ChartBase):
+class XBarR:
     """Xbar-R Chart.
 
     Use Xbar-R Chart to monitor the mean and
@@ -59,15 +36,11 @@ class XBarR(ChartBase):
     a process.
     """
 
-    default_template_name = "stacked.json"
-
     def __init__(
         self,
         data: list,
         subgroup_size: int = 5,
-        **kwargs,
     ) -> None:
-        super().__init__(**kwargs)
         groups = list(batched(data, n=subgroup_size))
         self.subgroup_size = subgroup_size
         self.x_bar = list(map(mean, groups))
@@ -117,35 +90,34 @@ class XBarR(ChartBase):
         cpk_lower = (self.x_bar - lsl) / (3 * sigma)
         return min((cpk_upper, cpk_lower))
 
-    def plot(self) -> dict:
-        template = self.get_template()
-        template["data"][0]["x"] = list(range(len(self.x_bar)))
-        template["data"][0]["y"] = self.x_bar
-        template["data"][1]["x"] = list(range(len(self.r)))
-        template["data"][1]["y"] = self.r
-        template["layout"]["shapes"][0]["name"] = "CL"
-        template["layout"]["shapes"][0]["y0"] = self.center_line_x
-        template["layout"]["shapes"][0]["y1"] = self.center_line_x
-        template["layout"]["shapes"][1]["name"] = "LCL"
-        template["layout"]["shapes"][1]["y0"] = self.lower_control_limit_x
-        template["layout"]["shapes"][1]["y1"] = self.lower_control_limit_x
-        template["layout"]["shapes"][2]["name"] = "UCL"
-        template["layout"]["shapes"][2]["y0"] = self.upper_control_limit_x
-        template["layout"]["shapes"][2]["y1"] = self.upper_control_limit_x
-        template["layout"]["shapes"][3]["name"] = "Rbar"
-        template["layout"]["shapes"][3]["y0"] = self.center_line_r
-        template["layout"]["shapes"][3]["y1"] = self.center_line_r
-        template["layout"]["shapes"][4]["name"] = "MR_LCL"
-        template["layout"]["shapes"][4]["y0"] = self.lower_control_limit_r
-        template["layout"]["shapes"][4]["y1"] = self.lower_control_limit_r
-        template["layout"]["shapes"][5]["name"] = "MR_UCL"
-        template["layout"]["shapes"][5]["y0"] = self.upper_control_limit_r
-        template["layout"]["shapes"][5]["y1"] = self.upper_control_limit_r
-        template["layout"]["xaxis"]["title"]["text"] = "Sample"
-        template["layout"]["xaxis2"]["title"]["text"] = "Sample"
-        template["layout"]["yaxis"]["title"]["text"] = "Sample Mean"
-        template["layout"]["yaxis2"]["title"]["text"] = "Sample Range"
-        return template
+    def plot(self) -> Figure:
+        figure = make_subplots(rows=2, cols=1)
+        figure.add_hline(y=self.center_line_x, name="CL", row=1, col=1, line_dash="dot")
+        figure.add_hline(y=self.lower_control_limit_x, name="LCL", row=1, col=1)
+        figure.add_hline(y=self.upper_control_limit_x, name="UCL", row=1, col=1)
+        figure.add_scatter(
+            x=list(range(len(self.x_bar))),
+            y=self.x_bar,
+            mode="lines+markers",
+            row=1,
+            col=1,
+        )
+        figure.update_xaxes(title="Sample", showgrid=False, zeroline=False, row=1, col=1)
+        figure.update_yaxes(title="Sample Mean", showgrid=False, zeroline=False, row=1, col=1)
+        figure.add_hline(y=self.center_line_r, name="CL", row=2, col=1, line_dash="dot")
+        figure.add_hline(y=self.lower_control_limit_r, name="R_LCL", row=2, col=1)
+        figure.add_hline(y=self.upper_control_limit_r, name="R_UCL", row=2, col=1)
+        figure.add_scatter(
+            x=list(range(len(self.r))),
+            y=self.r,
+            mode="lines+markers",
+            row=2,
+            col=1,
+        )
+        figure.update_xaxes(title="Sample", showgrid=False, zeroline=False, row=2, col=1)
+        figure.update_yaxes(title="Sample Range", showgrid=False, zeroline=False, row=2, col=1)
+        figure.update_layout(showlegend=False)
+        return figure
 
     def summary(self) -> None:
         print("X-Bar Chart Summary:")
@@ -172,15 +144,11 @@ class XBarS(ChartBase):
     a process.
     """
 
-    default_template_name = "stacked.json"
-
     def __init__(
         self,
         data: list,
         subgroup_size: int = 9,
-        **kwargs,
     ) -> None:
-        super().__init__(**kwargs)
         groups = list(batched(data, n=subgroup_size))
         self.subgroup_size = subgroup_size
         self.x_bar = list(map(mean, groups))
@@ -230,35 +198,34 @@ class XBarS(ChartBase):
         cpk_lower = (self.x_bar - lsl) / (3 * sigma)
         return min((cpk_upper, cpk_lower))
 
-    def plot(self) -> dict:
-        template = self.get_template()
-        template["data"][0]["x"] = list(range(len(self.x_bar)))
-        template["data"][0]["y"] = self.x_bar
-        template["data"][1]["x"] = list(range(len(self.s)))
-        template["data"][1]["y"] = self.s
-        template["layout"]["shapes"][0]["name"] = "CL"
-        template["layout"]["shapes"][0]["y0"] = self.center_line_x
-        template["layout"]["shapes"][0]["y1"] = self.center_line_x
-        template["layout"]["shapes"][1]["name"] = "LCL"
-        template["layout"]["shapes"][1]["y0"] = self.lower_control_limit_x
-        template["layout"]["shapes"][1]["y1"] = self.lower_control_limit_x
-        template["layout"]["shapes"][2]["name"] = "UCL"
-        template["layout"]["shapes"][2]["y0"] = self.upper_control_limit_x
-        template["layout"]["shapes"][2]["y1"] = self.upper_control_limit_x
-        template["layout"]["shapes"][3]["name"] = "SBar"
-        template["layout"]["shapes"][3]["y0"] = self.center_line_s
-        template["layout"]["shapes"][3]["y1"] = self.center_line_s
-        template["layout"]["shapes"][4]["name"] = "S_LCL"
-        template["layout"]["shapes"][4]["y0"] = self.lower_control_limit_s
-        template["layout"]["shapes"][4]["y1"] = self.lower_control_limit_s
-        template["layout"]["shapes"][5]["name"] = "S_UCL"
-        template["layout"]["shapes"][5]["y0"] = self.upper_control_limit_s
-        template["layout"]["shapes"][5]["y1"] = self.upper_control_limit_s
-        template["layout"]["xaxis"]["title"]["text"] = "Sample"
-        template["layout"]["xaxis2"]["title"]["text"] = "Sample"
-        template["layout"]["yaxis"]["title"]["text"] = "Sample Mean"
-        template["layout"]["yaxis2"]["title"]["text"] = "Sample StdDev"
-        return template
+    def plot(self) -> Figure:
+        figure = make_subplots(rows=2, cols=1)
+        figure.add_hline(y=self.center_line_x, name="CL", row=1, col=1, line_dash="dot")
+        figure.add_hline(y=self.lower_control_limit_x, name="LCL", row=1, col=1)
+        figure.add_hline(y=self.upper_control_limit_x, name="UCL", row=1, col=1)
+        figure.add_scatter(
+            x=list(range(len(self.x_bar))),
+            y=self.x_bar,
+            mode="lines+markers",
+            row=1,
+            col=1,
+        )
+        figure.update_xaxes(title="Sample", showgrid=False, zeroline=False, row=1, col=1)
+        figure.update_yaxes(title="Sample Mean", showgrid=False, zeroline=False, row=1, col=1)
+        figure.add_hline(y=self.center_line_s, name="CL", row=2, col=1, line_dash="dot")
+        figure.add_hline(y=self.lower_control_limit_s, name="S_LCL", row=2, col=1)
+        figure.add_hline(y=self.upper_control_limit_s, name="S_UCL", row=2, col=1)
+        figure.add_scatter(
+            x=list(range(len(self.s))),
+            y=self.s,
+            mode="lines+markers",
+            row=2,
+            col=1,
+        )
+        figure.update_xaxes(title="Sample", showgrid=False, zeroline=False, row=2, col=1)
+        figure.update_yaxes(title="Sample StdDev", showgrid=False, zeroline=False, row=2, col=1)
+        figure.update_layout(showlegend=False)
+        return figure
 
     def summary(self) -> None:
         print("X-Bar Chart Summary:")
@@ -273,7 +240,7 @@ class XBarS(ChartBase):
         print(f"Number of Subgroups: {len(self.s_bar)}")
 
 
-class IMR(ChartBase):
+class IMR:
     """I-MR Chart.
 
     Use I-MR Chart to monitor the mean and
@@ -286,10 +253,7 @@ class IMR(ChartBase):
     process.
     """
 
-    default_template_name = "stacked.json"
-
-    def __init__(self, data: list, **kwargs) -> None:
-        super().__init__(**kwargs)
+    def __init__(self, data: list) -> None:
         func = lambda i: abs(data[i] - data[i - 1])
         self.i = data
         self.mr = list(map(func, range(1, len(data))))
@@ -322,35 +286,34 @@ class IMR(ChartBase):
             3 * self.center_line_i / abc_table[2].d2
         ) 
 
-    def plot(self) -> dict:
-        template = self.get_template()
-        template["data"][0]["x"] = list(range(1, len(self.i) + 1))
-        template["data"][0]["y"] = self.i
-        template["data"][1]["x"] = list(range(2, len(self.i) + 1))
-        template["data"][1]["y"] = self.mr
-        template["layout"]["shapes"][0]["name"] = "CL"
-        template["layout"]["shapes"][0]["y0"] = self.center_line_i
-        template["layout"]["shapes"][0]["y1"] = self.center_line_i
-        template["layout"]["shapes"][1]["name"] = "LCL"
-        template["layout"]["shapes"][1]["y0"] = self.lower_control_limit_i
-        template["layout"]["shapes"][1]["y1"] = self.lower_control_limit_i
-        template["layout"]["shapes"][2]["name"] = "UCL"
-        template["layout"]["shapes"][2]["y0"] = self.upper_control_limit_i
-        template["layout"]["shapes"][2]["y1"] = self.upper_control_limit_i
-        template["layout"]["shapes"][3]["name"] = "MRBar"
-        template["layout"]["shapes"][3]["y0"] = self.center_line_mr
-        template["layout"]["shapes"][3]["y1"] = self.center_line_mr
-        template["layout"]["shapes"][4]["name"] = "MR_LCL"
-        template["layout"]["shapes"][4]["y0"] = self.upper_control_limit_mr
-        template["layout"]["shapes"][4]["y1"] = self.upper_control_limit_mr
-        template["layout"]["shapes"][5]["name"] = "MR_UCL"
-        template["layout"]["shapes"][5]["y0"] = self.upper_control_limit_mr
-        template["layout"]["shapes"][5]["y1"] = self.upper_control_limit_mr
-        template["layout"]["xaxis"]["title"]["text"] = "Observation"
-        template["layout"]["xaxis2"]["title"]["text"] = "Observation"
-        template["layout"]["yaxis"]["title"]["text"] = "Individual Value"
-        template["layout"]["yaxis2"]["title"]["text"] = "Moving Range"
-        return template
+    def plot(self) -> Figure:
+        figure = make_subplots(rows=2, cols=1)
+        figure.add_hline(y=self.center_line_i, name="CL", row=1, col=1, line_dash="dot")
+        figure.add_hline(y=self.lower_control_limit_i, name="LCL", row=1, col=1)
+        figure.add_hline(y=self.upper_control_limit_i, name="UCL", row=1, col=1)
+        figure.add_scatter(
+            x=list(range(len(self.i))),
+            y=self.i,
+            mode="lines+markers",
+            row=1,
+            col=1,
+        )
+        figure.update_xaxes(title="Observation", showgrid=False, zeroline=False, row=1, col=1)
+        figure.update_yaxes(title="Individual Value", showgrid=False, zeroline=False, row=1, col=1)
+        figure.add_hline(y=self.center_line_mr, name="CL", row=2, col=1, line_dash="dot")
+        figure.add_hline(y=self.lower_control_limit_mr, name="MR_LCL", row=2, col=1)
+        figure.add_hline(y=self.upper_control_limit_mr, name="MR_UCL", row=2, col=1)
+        figure.add_scatter(
+            x=list(range(len(self.mr))),
+            y=self.mr,
+            mode="lines+markers",
+            row=2,
+            col=1,
+        )
+        figure.update_xaxes(title="Observation", showgrid=False, zeroline=False, row=2, col=1)
+        figure.update_yaxes(title="Moving Range", showgrid=False, zeroline=False, row=2, col=1)
+        figure.update_layout(showlegend=False)
+        return figure
 
     def summary(self) -> None:
         print("I Chart Summary:")
