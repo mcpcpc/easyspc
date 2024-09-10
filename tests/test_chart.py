@@ -25,23 +25,113 @@ class ChartTestCase(TestCase):
         base.get_template()
         get_data_mock.assert_called_once()
 
-    def test_i_mr(self):
-        data = list(range(3))
-        imr = IMR(data)
-        response = imr.plot()
-        self.assertIsInstance(response, dict)
-
-    def test_x_bar_r(self):
+    def test_imr_center_line_i(self):
         data = list(range(9))
-        xbarr = XBarR(data, subgroup_size=3)
-        response = xbarr.plot()
-        self.assertIsInstance(response, dict)
+        chart = IMR(data)
+        response = chart.center_line_i
+        self.assertIsInstance(response, (float, int))
 
-    def test_x_bar_s(self):
+    def test_imr_center_line_mr(self):
         data = list(range(9))
-        xbars = XBarS(data, subgroup_size=3)
-        response = xbars.plot()
-        self.assertIsInstance(response, dict)
+        chart = IMR(data)
+        response = chart.center_line_mr
+        self.assertIsInstance(response, (float, int))
+
+    def test_imr_lower_control_limit_i(self):
+        data = list(range(9))
+        chart = IMR(data)
+        response = chart.lower_control_limit_i
+        self.assertIsInstance(response, (float, int))
+
+    def test_imr_upper_control_limit_i(self):
+        data = list(range(9))
+        chart = IMR(data)
+        response = chart.upper_control_limit_i
+        self.assertIsInstance(response, (float, int))
+
+    def test_imr_lower_control_limit_mr(self):
+        data = list(range(9))
+        chart = IMR(data)
+        response = chart.lower_control_limit_mr
+        self.assertIsInstance(response, (float, int))
+
+    def test_imr_upper_control_limit_mr(self):
+        data = list(range(9))
+        chart = IMR(data)
+        response = chart.lower_control_limit_mr
+        self.assertIsInstance(response, (float, int))
+
+    def test_xbarr_center_line_x(self):
+        data = list(range(9))
+        chart = XBarR(data, subgroup_size=3)
+        response = chart.center_line_x
+        self.assertIsInstance(response, (float, int))
+
+    def test_xbarr_center_line_r(self):
+        data = list(range(9))
+        chart = XBarR(data, subgroup_size=3)
+        response = chart.center_line_r
+        self.assertIsInstance(response, (float, int))
+
+    def test_xbarr_lower_control_limit_x(self):
+        data = list(range(9))
+        chart = XBarR(data, subgroup_size=3)
+        response = chart.lower_control_limit_x
+        self.assertIsInstance(response, (float, int))
+
+    def test_xbarr_upper_control_limit_x(self):
+        data = list(range(9))
+        chart = XBarR(data, subgroup_size=3)
+        response = chart.upper_control_limit_x
+        self.assertIsInstance(response, (float, int))
+
+    def test_xbarr_lower_control_limit_r(self):
+        data = list(range(9))
+        chart = XBarR(data, subgroup_size=3)
+        response = chart.lower_control_limit_r
+        self.assertIsInstance(response, (float, int))
+
+    def test_xbarr_upper_control_limit_r(self):
+        data = list(range(9))
+        chart = XBarR(data, subgroup_size=3)
+        response = chart.lower_control_limit_r
+        self.assertIsInstance(response, (float, int))
+
+    def test_xbars_center_line_x(self):
+        data = list(range(9))
+        chart = XBarS(data, subgroup_size=3)
+        response = chart.center_line_x
+        self.assertIsInstance(response, (float, int))
+
+    def test_xbars_center_line_s(self):
+        data = list(range(9))
+        chart = XBarS(data, subgroup_size=3)
+        response = chart.center_line_s
+        self.assertIsInstance(response, (float, int))
+
+    def test_xbars_lower_control_limit_x(self):
+        data = list(range(9))
+        chart = XBarS(data, subgroup_size=3)
+        response = chart.lower_control_limit_x
+        self.assertIsInstance(response, (float, int))
+
+    def test_xbars_upper_control_limit_x(self):
+        data = list(range(9))
+        chart = XBarS(data, subgroup_size=3)
+        response = chart.upper_control_limit_x
+        self.assertIsInstance(response, (float, int))
+
+    def test_xbars_lower_control_limit_s(self):
+        data = list(range(9))
+        chart = XBarS(data, subgroup_size=3)
+        response = chart.lower_control_limit_s
+        self.assertIsInstance(response, (float, int))
+
+    def test_xbars_upper_control_limit_s(self):
+        data = list(range(9))
+        chart = XBarS(data, subgroup_size=3)
+        response = chart.lower_control_limit_s
+        self.assertIsInstance(response, (float, int))
 
 
 if __name__ == "__main__":
