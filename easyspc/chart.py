@@ -41,16 +41,27 @@ class XBarR:
         data: list,
         subgroup_size: int = 5,
     ) -> None:
-        groups = list(batched(data, n=subgroup_size))
+        self.data = data
         self.subgroup_size = subgroup_size
-        self.x_bar = list(map(mean, groups))
-        self.r = list(map(lambda v: max(v) - min(v), groups))
+
+    def x_bar(self) -> list:
+        n = self.subgroup_size
+        groups = list(batched(self.data, n))
+        return list(map(mean, groups))
+
+    def r(self) -> list: 
+        n = self.subgroup_size
+        groups = list(batched(self.data, n))
+        func = lambda v: max(v) - min(v)
+        return list(map(func, groups))
 
     def center_line_x(self) -> float:
+        x_bar = self.x_bar()
         return mean(self.x_bar)
 
     def center_line_r(self) -> float:
-        return mean(self.r)
+        r = self.r()
+        return mean(r)
 
     def lower_control_limit_x(self) -> float:
         A2 = abc_table[self.subgroup_size].A2
@@ -89,9 +100,11 @@ class XBarR:
         return min((cpk_upper, cpk_lower))
 
     def plot(self) -> Figure:
+        x_bar = self.x_bar()
         cl_x = self.center_line_x()
         lcl_x = self.lower_control_limit_x()
         ucl_x = self.upper_control_limit_x()
+        r = self.r()
         cl_r = self.center_line_r()
         lcl_r = self.lower_control_limit_r()
         ucl_r = self.upper_control_limit_r()
@@ -100,8 +113,8 @@ class XBarR:
         figure.add_hline(y=lcl_x, name="LCL", row=1, col=1)
         figure.add_hline(y=ucl_x, name="UCL", row=1, col=1)
         figure.add_scatter(
-            x=list(range(len(self.x_bar))),
-            y=self.x_bar,
+            x=list(range(len(x_bar))),
+            y=x_bar,
             mode="lines+markers",
             row=1,
             col=1,
@@ -116,8 +129,8 @@ class XBarR:
         figure.add_hline(y=lcl_r, name="R_LCL", row=2, col=1)
         figure.add_hline(y=ucl_r, name="R_UCL", row=2, col=1)
         figure.add_scatter(
-            x=list(range(len(self.r))),
-            y=self.r,
+            x=list(range(len(r))),
+            y=r,
             mode="lines+markers",
             row=2,
             col=1,
