@@ -134,7 +134,7 @@ class ChartTestCase(TestCase):
 
     def test_p_lower_control_limit_variable_size(self):
         defects = list(range(9))
-        sizes = list(range(9))
+        sizes = [1,] * 9
         chart = P(defects, sample_sizes=sizes)
         response = chart.lower_control_limit
         self.assertIsInstance(response, list)
