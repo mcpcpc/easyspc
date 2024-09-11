@@ -129,13 +129,13 @@ class ChartTestCase(TestCase):
     def test_p_center_line(self):
         defects = list(range(9))
         chart = P(defects, sample_sizes=1)
-        response = chart.center_line
+        response = chart.center_line()
         self.assertIsInstance(response, (float, int))
 
     def test_p_lower_control_limit_constant_size(self):
         defects = [3, 5, 2, 4, 6, 1, 3, 2, 4, 3]
         chart = P(defects, sample_sizes=100)
-        response = chart.lower_control_limit
+        response = chart.lower_control_limit()
         self.assertIsInstance(response, (float, int))
 
     def test_p_lower_control_limit_variable_size(self):
@@ -144,13 +144,13 @@ class ChartTestCase(TestCase):
             100,
         ] * 10
         chart = P(defects, sample_sizes=sizes)
-        response = chart.lower_control_limit
+        response = chart.lower_control_limit()
         self.assertIsInstance(response, list)
 
     def test_p_upper_control_limit_constant_size(self):
         defects = [3, 5, 2, 4, 6, 1, 3, 2, 4, 3]
         chart = P(defects, sample_sizes=100)
-        response = chart.upper_control_limit
+        response = chart.upper_control_limit()
         self.assertIsInstance(response, (float, int))
 
     def test_p_upper_control_limit_variable_size(self):
@@ -159,7 +159,7 @@ class ChartTestCase(TestCase):
             100,
         ] * 10
         chart = P(defects, sample_sizes=sizes)
-        response = chart.upper_control_limit
+        response = chart.upper_control_limit()
         self.assertIsInstance(response, list)
 
 

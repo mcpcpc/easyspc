@@ -335,28 +335,26 @@ class P:
 
     def __init__(
         self,
-        defects: list,
+        data: list,
         sample_sizes: list | int,
     ) -> None:
-        self.defects = defects
+        self.data = data
         self.sample_sizes = sample_sizes
 
-    @property
     def p(self) -> list | float | int:
         if isinstance(self.sample_sizes, list):
             func = lambda v: v[0] / v[1]
-            z = zip(self.defects, self.sample_sizes)
+            z = zip(self.data, self.sample_sizes)
             return list(map(func, z))
         func = lambda v: v / self.sample_sizes
-        return list(map(func, self.defects))
+        return list(map(func, self.data))
 
-    @property
     def center_line(self) -> float | int:
-        return mean(self.p)
+        p = self.p()
+        return mean(p)
 
-    @property
     def lower_control_limit(self) -> list | float:
-        p_bar = self.center_line
+        p_bar = self.center_line()
         if isinstance(self.sample_sizes, (float | int)):
             return p_bar - 3 * (p_bar * (1 - p_bar)) ** (0.5) / (
                 self.sample_sizes ** (0.5)
@@ -364,9 +362,8 @@ class P:
         func = lambda n: p_bar - 3 * (p_bar * (1 - p_bar)) ** (0.5) / (n ** (0.5))
         return list(map(func, self.sample_sizes))
 
-    @property
     def upper_control_limit(self) -> list | float:
-        p_bar = self.center_line
+        p_bar = self.center_line()
         if isinstance(self.sample_sizes, (float | int)):
             return p_bar + 3 * (p_bar * (1 - p_bar)) ** (0.5) / (
                 self.sample_sizes ** (0.5)
@@ -375,14 +372,16 @@ class P:
         return list(map(func, self.sample_sizes))
 
     def plot(self) -> Figure:
+        p = self.p()
+        cl = self.center_line()
+        lcl = self.lower_control_limit()
+        ucl = self.upper_control_limit()
         figure = Figure()
-        figure.add_hline(y=self.p_bar, name="CL", line_dash="dot")
-        figure.add_hline(y=self.lower_control_limit, name="LCL")
-        figure.add_hline(y=self.upper_control_limit, name="UCL")
-        figure.add_scatter(x=list(map(len(self.p))), y=self.p)
-        figure.update_xaxes(
-            title="Sample", showgrid=False, zeroline=False, row=2, col=1
-        )
-        figure.update_yaxes(title="P", showgrid=False, zeroline=False, row=2, col=1)
+        figure.add_hline(y=cl, name="CL", line_dash="dot")
+        figure.add_hline(y=lcl, name="LCL")
+        figure.add_hline(y=ucl, name="UCL")
+        figure.add_scatter(x=list(range(len(p))), y=p)
+        figure.update_xaxes(title="Sample", showgrid=False, zeroline=False)
+        figure.update_yaxes(title="P", showgrid=False, zeroline=False)
         figure.update_layout(showlegend=False)
         return figure
