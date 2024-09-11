@@ -162,60 +162,65 @@ class XBarS:
         data: list,
         subgroup_size: int = 9,
     ) -> None:
-        groups = list(batched(data, n=subgroup_size))
+        self.data = data
         self.subgroup_size = subgroup_size
+        groups = list(batched(data, n=subgroup_size))
         self.x_bar = list(map(mean, groups))
         self.s = list(map(stdev, groups))
 
-    @property
     def center_line_x(self) -> float:
         return mean(self.x_bar)
 
-    @property
     def center_line_s(self) -> float:
         return mean(self.s)
 
-    @property
     def lower_control_limit_x(self) -> float:
         A3 = abc_table[self.subgroup_size].A3
-        return self.center_line_x - (A3 * self.center_line_s)
+        center_line_x = self.center_line_x()
+        center_line_s = self.center_line_s()
+        return center_line_x - (A3 * center_line_s)
 
-    @property
     def upper_control_limit_x(self) -> float:
         A3 = abc_table[self.subgroup_size].A3
-        return self.center_line_x + (A3 * self.center_line_s)
+        center_line_x = self.center_line_x()
+        center_line_s = self.center_line_s()
+        return center_line_x + (A3 * center_line_s)
 
-    @property
-    def lower_control_limit_s(self) -> float:
+    def lower_control_limit_s(self) -> float: 
         B3 = abc_table[self.subgroup_size].B3
-        return B3 * self.center_line_s
+        center_line_s = self.center_line_s()
+        return B3 * center_line_s
 
-    @property
     def upper_control_limit_s(self) -> float:
         B4 = abc_table[self.subgroup_size].B4
-        return B4 * self.center_line_s
+        center_line_s = self.center_line_s()
+        return B4 * center_line_s
 
     def cp(self, lsl: float, usl: float) -> float:
-        """Process capability ratio."""
-
         C4 = abc_table[self.subgroup_size].C4
-        sigma = self.center_line_s / C4
+        center_line_s = self.center_line_s()
+        sigma = center_line_s / C4
         return (usl - lsl) / (6 * sigma)
 
     def cpk(self, lsl: float, usl: float) -> float:
-        """Process performance ratio."""
-
         C4 = abc_table[self.subgroup_size].C4
+        center_line_s = center_line_s()
         sigma = self.center_line_s / C4
         cpk_upper = (usl - self.x_bar) / (3 * sigma)
         cpk_lower = (self.x_bar - lsl) / (3 * sigma)
         return min((cpk_upper, cpk_lower))
 
     def plot(self) -> Figure:
+        cl_x = self.center_line_x()
+        lcl_x = self.lower_control_limit_x()
+        ucl_x = self.upper_control_limit_x()
+        cl_s = self.center_line_s()
+        lcl_s = self.lower_control_limit_s()
+        ucl_s = self.upper_control_limit_s()
         figure = make_subplots(rows=2, cols=1)
-        figure.add_hline(y=self.center_line_x, name="CL", row=1, col=1, line_dash="dot")
-        figure.add_hline(y=self.lower_control_limit_x, name="LCL", row=1, col=1)
-        figure.add_hline(y=self.upper_control_limit_x, name="UCL", row=1, col=1)
+        figure.add_hline(y=cl_x, name="CL", row=1, col=1, line_dash="dot")
+        figure.add_hline(y=lcl_x, name="LCL", row=1, col=1)
+        figure.add_hline(y=ucl_x, name="UCL", row=1, col=1)
         figure.add_scatter(
             x=list(range(len(self.x_bar))),
             y=self.x_bar,
@@ -229,9 +234,9 @@ class XBarS:
         figure.update_yaxes(
             title="Sample Mean", showgrid=False, zeroline=False, row=1, col=1
         )
-        figure.add_hline(y=self.center_line_s, name="CL", row=2, col=1, line_dash="dot")
-        figure.add_hline(y=self.lower_control_limit_s, name="S_LCL", row=2, col=1)
-        figure.add_hline(y=self.upper_control_limit_s, name="S_UCL", row=2, col=1)
+        figure.add_hline(y=cl_s, name="CL", row=2, col=1, line_dash="dot")
+        figure.add_hline(y=lcl_s, name="S_LCL", row=2, col=1)
+        figure.add_hline(y=ucl_s, name="S_UCL", row=2, col=1)
         figure.add_scatter(
             x=list(range(len(self.s))),
             y=self.s,
