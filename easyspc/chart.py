@@ -416,6 +416,6 @@ class P:
         figure.add_hline(y=ucl, name="UCL")
         figure.add_scatter(x=list(range(len(p))), y=p)
         figure.update_xaxes(title="Sample", showgrid=False, zeroline=False)
-        figure.update_yaxes(title="P", showgrid=False, zeroline=False)
+        figure.update_yaxes(title="Proportion", showgrid=False, zeroline=False)
         figure.update_layout(showlegend=False)
         return figure
