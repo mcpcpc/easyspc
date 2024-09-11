@@ -364,7 +364,7 @@ class P:
     @property
     def upper_control_limit(self) -> list | float:
         p_bar = self.center_line
-        if isinstance(p_bar, list):
+        if isinstance(self.sample_sizes, list):
             return p_bar + 3 * (
                 p_bar * (1 - p_bar)
             ) ** (.5) / (self.sample_sizes ** (.5))
