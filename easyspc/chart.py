@@ -326,3 +326,79 @@ class IMR:
         print(f"Center Line (CL): {self.center_line_s:.3f}")
         print(f"Upper Control Limit (UCL): {self.upper_control_limit_mr:.3f}")
         print(f"Lower Control Limit (UCL): {self.lower_control_limit_mr:.3f}")
+
+
+class P:
+    """Proportion (P) chart.
+    
+    Use P Chart to monitor the proportion of
+    defective items where each item can be
+    classified into one of two categories,
+    such as pass or fail. Use this control
+    chart to monitor process stability over
+    time so that you can identify and correct
+    instabilities in a process.
+    """
+
+def __init__(
+    self,
+    defects: list,
+    sample_sizes: list | int, 
+) -> None:
+    self.defects = defects
+    self.sample_sizes = sample_sizes
+ 
+    @property
+    def p(self) -> list | float | int:
+        if isinstance(self.sample_sizes, list):
+            func = lambda v: v[0] / v[1]
+            z = zip(self.defects, self.sample_sizes)
+            return list(map(func, z))
+        func = lambda v: v / self.sample_sizes
+        return list(map(func, self.defects))
+ 
+    @property
+    def center_line(self) -> float | int:
+        return mean(self.p)
+ 
+    @property
+    def upper_control_limit(self) -> list | float:
+        p_bar = self.center_line
+        if isinstance(p_bar, list):
+            return p_bar + 3 * (
+                p_bar * (1 - p_bar)
+            ) ** (.5) / (self.sample_sizes ** (.5))
+        func = lambda n: p_bar + 3 * (
+            p_bar * (1 - p_bar)
+        ) ** (.5) / (n ** (.5))
+        return list(map(func, self.sample_sizes))
+
+    @property
+    def lower_control_limit(self) -> list | float:
+        p_bar = self.center_line
+        if isinstance(p_bar, list):
+            return p_bar - 3 * (
+                p_bar * (1 - p_bar)
+            ) ** (.5) / (self.sample_sizes ** (.5))
+        func = lambda n: p_bar - 3 * (
+            p_bar * (1 - p_bar)
+        ) ** (.5) / (n ** (.5))
+        return list(map(func, self.sample_sizes))
+
+    def plot(self) -> Figure:
+        figure = Figure()
+        figure.add_hline(y=self.p_bar, name="CL", line_dash="dot")
+        figure.add_hline(y=self.lower_control_limit, name="LCL")
+        figure.add_hline(y=self.upper_control_limit, name="UCL")
+        figure.add_scatter(x=list(map(len(self.p))), y=self.p)
+        figure.update_xaxes(title="Sample", showgrid=False, zeroline=False, row=2, col=1)
+        figure.update_yaxes(title="P", showgrid=False, zeroline=False, row=2, col=1)
+        figure.update_layout(showlegend=False)
+        return figure
+
+    def summary(self) -> None:
+        print("P Chart Summary:")
+        print(f"Center Line (CL): {self.center_line:.3f}")
+        print(f"Upper Control Limit (UCL): {max(self.upper_control_limit:.3f}")
+        print(f"Lower Control Limit (UCL): {min(self.lower_control_limit:.3f}")
+        print(f"Number of Samples: {len(self.p)}")

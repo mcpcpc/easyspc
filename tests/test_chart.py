@@ -9,6 +9,7 @@ from easyspc.chart import batched
 from easyspc.chart import IMR
 from easyspc.chart import XBarR
 from easyspc.chart import XBarS
+from easyspc.chart import P
 
 
 class ChartTestCase(TestCase):
