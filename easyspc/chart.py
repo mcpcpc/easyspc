@@ -46,55 +46,59 @@ class XBarR:
         self.x_bar = list(map(mean, groups))
         self.r = list(map(lambda v: max(v) - min(v), groups))
 
-    @property
     def center_line_x(self) -> float:
         return mean(self.x_bar)
 
-    @property
     def center_line_r(self) -> float:
         return mean(self.r)
 
-    @property
     def lower_control_limit_x(self) -> float:
         A2 = abc_table[self.subgroup_size].A2
-        return self.center_line_x - (A2 * self.center_line_r)
+        center_line_x = self.center_line_x()
+        center_line_r = self.center_line_r()
+        return center_line_x - (A2 * center_line_r)
 
-    @property
     def upper_control_limit_x(self) -> float:
         A2 = abc_table[self.subgroup_size].A2
-        return self.center_line_x + (A2 * self.center_line_r)
+        center_line_x = self.center_line_x()
+        center_line_r = self.center_line_r()
+        return center_line_x + (A2 * center_line_r)
 
-    @property
     def lower_control_limit_r(self) -> float:
         D3 = abc_table[self.subgroup_size].D3
+        center_line_r = self.center_line_r()
         return D3 * self.center_line_r
 
-    @property
     def upper_control_limit_r(self) -> float:
         D4 = abc_table[self.subgroup_size].D4
+        center_line_r = self.center_line_r()
         return D4 * self.center_line_r
 
     def cp(self, lsl: float, usl: float) -> float:
-        """Process capability ratio."""
-
         d2 = abc_table[self.subgroup_size].d2
-        sigma = self.center_line_r / d2
+        center_line_r = self.center_line_r()
+        sigma = center_line_r / d2
         return (usl - lsl) / (6 * sigma)
 
     def cpk(self, lsl: float, usl: float) -> float:
-        """Process performance ratio."""
-
         d2 = abc_table[self.subgroup_size].d2
-        sigma = self.center_line_r / d2
+        center_line_r = self.center_line_r()
+        sigma = center_line_r / d2
         cpk_upper = (usl - self.x_bar) / (3 * sigma)
         cpk_lower = (self.x_bar - lsl) / (3 * sigma)
         return min((cpk_upper, cpk_lower))
 
     def plot(self) -> Figure:
+        cl_x = self.center_line_x()
+        lcl_x = self.lower_control_limit_x()
+        ucl_x = self.upper_control_limit_x()
+        cl_r = self.center_line_r()
+        lcl_r = self.lower_control_limit_r()
+        ucl_r = self.upper_control_limit_r()
         figure = make_subplots(rows=2, cols=1)
-        figure.add_hline(y=self.center_line_x, name="CL", row=1, col=1, line_dash="dot")
-        figure.add_hline(y=self.lower_control_limit_x, name="LCL", row=1, col=1)
-        figure.add_hline(y=self.upper_control_limit_x, name="UCL", row=1, col=1)
+        figure.add_hline(y=cl_x, name="CL", row=1, col=1, line_dash="dot")
+        figure.add_hline(y=lcl_x, name="LCL", row=1, col=1)
+        figure.add_hline(y=ucl_x, name="UCL", row=1, col=1)
         figure.add_scatter(
             x=list(range(len(self.x_bar))),
             y=self.x_bar,
@@ -108,9 +112,9 @@ class XBarR:
         figure.update_yaxes(
             title="Sample Mean", showgrid=False, zeroline=False, row=1, col=1
         )
-        figure.add_hline(y=self.center_line_r, name="CL", row=2, col=1, line_dash="dot")
-        figure.add_hline(y=self.lower_control_limit_r, name="R_LCL", row=2, col=1)
-        figure.add_hline(y=self.upper_control_limit_r, name="R_UCL", row=2, col=1)
+        figure.add_hline(y=cl_r, name="CL", row=2, col=1, line_dash="dot")
+        figure.add_hline(y=lcl_r, name="R_LCL", row=2, col=1)
+        figure.add_hline(y=ucl_r, name="R_UCL", row=2, col=1)
         figure.add_scatter(
             x=list(range(len(self.r))),
             y=self.r,
