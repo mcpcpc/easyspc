@@ -67,12 +67,12 @@ class XBarR:
     def lower_control_limit_r(self) -> float:
         D3 = abc_table[self.subgroup_size].D3
         center_line_r = self.center_line_r()
-        return D3 * self.center_line_r
+        return D3 * center_line_r
 
     def upper_control_limit_r(self) -> float:
         D4 = abc_table[self.subgroup_size].D4
         center_line_r = self.center_line_r()
-        return D4 * self.center_line_r
+        return D4 * center_line_r
 
     def cp(self, lsl: float, usl: float) -> float:
         d2 = abc_table[self.subgroup_size].d2
