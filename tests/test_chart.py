@@ -57,37 +57,37 @@ class ChartTestCase(TestCase):
     def test_xbarr_center_line_x(self):
         data = list(range(9))
         chart = XBarR(data, subgroup_size=3)
-        response = chart.center_line_x
+        response = chart.center_line_x()
         self.assertIsInstance(response, (float, int))
 
     def test_xbarr_center_line_r(self):
         data = list(range(9))
         chart = XBarR(data, subgroup_size=3)
-        response = chart.center_line_r
+        response = chart.center_line_r()
         self.assertIsInstance(response, (float, int))
 
     def test_xbarr_lower_control_limit_x(self):
         data = list(range(9))
         chart = XBarR(data, subgroup_size=3)
-        response = chart.lower_control_limit_x
+        response = chart.lower_control_limit_x()
         self.assertIsInstance(response, (float, int))
 
     def test_xbarr_upper_control_limit_x(self):
         data = list(range(9))
         chart = XBarR(data, subgroup_size=3)
-        response = chart.upper_control_limit_x
+        response = chart.upper_control_limit_x()
         self.assertIsInstance(response, (float, int))
 
     def test_xbarr_lower_control_limit_r(self):
         data = list(range(9))
         chart = XBarR(data, subgroup_size=3)
-        response = chart.lower_control_limit_r
+        response = chart.lower_control_limit_r()
         self.assertIsInstance(response, (float, int))
 
     def test_xbarr_upper_control_limit_r(self):
         data = list(range(9))
         chart = XBarR(data, subgroup_size=3)
-        response = chart.lower_control_limit_r
+        response = chart.upper_control_limit_r()
         self.assertIsInstance(response, (float, int))
 
     def test_xbars_center_line_x(self):
