@@ -258,7 +258,8 @@ class IMR:
 
     @property
     def mr(self) -> list:
-        indexes = range(1, len(self.data))
+        data = self.data
+        indexes = range(1, len(data))
         func = lambda i: abs(data[i] - data[i - 1])
         return list(map(func, indexes))
 
