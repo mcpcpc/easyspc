@@ -75,7 +75,7 @@ class XBarR:
         return D4 * self.center_line_r
 
     def cp(self, lsl: float, usl: float) -> float:
-        """Process capability ratio.""" 
+        """Process capability ratio."""
 
         d2 = abc_table[self.subgroup_size].d2
         sigma = self.center_line_r / d2
@@ -102,8 +102,12 @@ class XBarR:
             row=1,
             col=1,
         )
-        figure.update_xaxes(title="Sample", showgrid=False, zeroline=False, row=1, col=1)
-        figure.update_yaxes(title="Sample Mean", showgrid=False, zeroline=False, row=1, col=1)
+        figure.update_xaxes(
+            title="Sample", showgrid=False, zeroline=False, row=1, col=1
+        )
+        figure.update_yaxes(
+            title="Sample Mean", showgrid=False, zeroline=False, row=1, col=1
+        )
         figure.add_hline(y=self.center_line_r, name="CL", row=2, col=1, line_dash="dot")
         figure.add_hline(y=self.lower_control_limit_r, name="R_LCL", row=2, col=1)
         figure.add_hline(y=self.upper_control_limit_r, name="R_UCL", row=2, col=1)
@@ -114,8 +118,12 @@ class XBarR:
             row=2,
             col=1,
         )
-        figure.update_xaxes(title="Sample", showgrid=False, zeroline=False, row=2, col=1)
-        figure.update_yaxes(title="Sample Range", showgrid=False, zeroline=False, row=2, col=1)
+        figure.update_xaxes(
+            title="Sample", showgrid=False, zeroline=False, row=2, col=1
+        )
+        figure.update_yaxes(
+            title="Sample Range", showgrid=False, zeroline=False, row=2, col=1
+        )
         figure.update_layout(showlegend=False)
         return figure
 
@@ -183,7 +191,7 @@ class XBarS:
         return B4 * self.center_line_s
 
     def cp(self, lsl: float, usl: float) -> float:
-        """Process capability ratio.""" 
+        """Process capability ratio."""
 
         C4 = abc_table[self.subgroup_size].C4
         sigma = self.center_line_s / C4
@@ -210,8 +218,12 @@ class XBarS:
             row=1,
             col=1,
         )
-        figure.update_xaxes(title="Sample", showgrid=False, zeroline=False, row=1, col=1)
-        figure.update_yaxes(title="Sample Mean", showgrid=False, zeroline=False, row=1, col=1)
+        figure.update_xaxes(
+            title="Sample", showgrid=False, zeroline=False, row=1, col=1
+        )
+        figure.update_yaxes(
+            title="Sample Mean", showgrid=False, zeroline=False, row=1, col=1
+        )
         figure.add_hline(y=self.center_line_s, name="CL", row=2, col=1, line_dash="dot")
         figure.add_hline(y=self.lower_control_limit_s, name="S_LCL", row=2, col=1)
         figure.add_hline(y=self.upper_control_limit_s, name="S_UCL", row=2, col=1)
@@ -222,8 +234,12 @@ class XBarS:
             row=2,
             col=1,
         )
-        figure.update_xaxes(title="Sample", showgrid=False, zeroline=False, row=2, col=1)
-        figure.update_yaxes(title="Sample StdDev", showgrid=False, zeroline=False, row=2, col=1)
+        figure.update_xaxes(
+            title="Sample", showgrid=False, zeroline=False, row=2, col=1
+        )
+        figure.update_yaxes(
+            title="Sample StdDev", showgrid=False, zeroline=False, row=2, col=1
+        )
         figure.update_layout(showlegend=False)
         return figure
 
@@ -282,16 +298,12 @@ class IMR:
     @property
     def lower_control_limit_mr(self) -> float:
         d2 = abc_table[2].d2
-        return self.center_line_mr - (
-            3 * self.center_line_i / d2
-        )
+        return self.center_line_mr - (3 * self.center_line_i / d2)
 
     @property
     def upper_control_limit_mr(self) -> float:
         d2 = abc_table[2].d2
-        return self.center_line_mr + (
-            3 * self.center_line_i / d2
-        ) 
+        return self.center_line_mr + (3 * self.center_line_i / d2)
 
     def plot(self) -> Figure:
         figure = make_subplots(rows=2, cols=1)
@@ -305,9 +317,15 @@ class IMR:
             row=1,
             col=1,
         )
-        figure.update_xaxes(title="Observation", showgrid=False, zeroline=False, row=1, col=1)
-        figure.update_yaxes(title="Individual Value", showgrid=False, zeroline=False, row=1, col=1)
-        figure.add_hline(y=self.center_line_mr, name="CL", row=2, col=1, line_dash="dot")
+        figure.update_xaxes(
+            title="Observation", showgrid=False, zeroline=False, row=1, col=1
+        )
+        figure.update_yaxes(
+            title="Individual Value", showgrid=False, zeroline=False, row=1, col=1
+        )
+        figure.add_hline(
+            y=self.center_line_mr, name="CL", row=2, col=1, line_dash="dot"
+        )
         figure.add_hline(y=self.lower_control_limit_mr, name="MR_LCL", row=2, col=1)
         figure.add_hline(y=self.upper_control_limit_mr, name="MR_UCL", row=2, col=1)
         figure.add_scatter(
@@ -317,8 +335,12 @@ class IMR:
             row=2,
             col=1,
         )
-        figure.update_xaxes(title="Observation", showgrid=False, zeroline=False, row=2, col=1)
-        figure.update_yaxes(title="Moving Range", showgrid=False, zeroline=False, row=2, col=1)
+        figure.update_xaxes(
+            title="Observation", showgrid=False, zeroline=False, row=2, col=1
+        )
+        figure.update_yaxes(
+            title="Moving Range", showgrid=False, zeroline=False, row=2, col=1
+        )
         figure.update_layout(showlegend=False)
         return figure
 
@@ -335,7 +357,7 @@ class IMR:
 
 class P:
     """Proportion (P) chart.
-    
+
     Use P Chart to monitor the proportion of
     defective items where each item can be
     classified into one of two categories,
@@ -348,11 +370,11 @@ class P:
     def __init__(
         self,
         defects: list,
-        sample_sizes: list | int, 
+        sample_sizes: list | int,
     ) -> None:
         self.defects = defects
         self.sample_sizes = sample_sizes
- 
+
     @property
     def p(self) -> list | float | int:
         if isinstance(self.sample_sizes, list):
@@ -361,33 +383,29 @@ class P:
             return list(map(func, z))
         func = lambda v: v / self.sample_sizes
         return list(map(func, self.defects))
- 
+
     @property
     def center_line(self) -> float | int:
         return mean(self.p)
- 
+
     @property
     def lower_control_limit(self) -> list | float:
         p_bar = self.center_line
         if isinstance(self.sample_sizes, (float | int)):
-            return p_bar - 3 * (
-                p_bar * (1 - p_bar)
-            ) ** (.5) / (self.sample_sizes ** (.5))
-        func = lambda n: p_bar - 3 * (
-            p_bar * (1 - p_bar)
-        ) ** (.5) / (n ** (.5))
+            return p_bar - 3 * (p_bar * (1 - p_bar)) ** (0.5) / (
+                self.sample_sizes ** (0.5)
+            )
+        func = lambda n: p_bar - 3 * (p_bar * (1 - p_bar)) ** (0.5) / (n ** (0.5))
         return list(map(func, self.sample_sizes))
- 
+
     @property
     def upper_control_limit(self) -> list | float:
         p_bar = self.center_line
         if isinstance(self.sample_sizes, (float | int)):
-            return p_bar + 3 * (
-                p_bar * (1 - p_bar)
-            ) ** (.5) / (self.sample_sizes ** (.5))
-        func = lambda n: p_bar + 3 * (
-            p_bar * (1 - p_bar)
-        ) ** (.5) / (n ** (.5))
+            return p_bar + 3 * (p_bar * (1 - p_bar)) ** (0.5) / (
+                self.sample_sizes ** (0.5)
+            )
+        func = lambda n: p_bar + 3 * (p_bar * (1 - p_bar)) ** (0.5) / (n ** (0.5))
         return list(map(func, self.sample_sizes))
 
     def plot(self) -> Figure:
@@ -396,7 +414,9 @@ class P:
         figure.add_hline(y=self.lower_control_limit, name="LCL")
         figure.add_hline(y=self.upper_control_limit, name="UCL")
         figure.add_scatter(x=list(map(len(self.p))), y=self.p)
-        figure.update_xaxes(title="Sample", showgrid=False, zeroline=False, row=2, col=1)
+        figure.update_xaxes(
+            title="Sample", showgrid=False, zeroline=False, row=2, col=1
+        )
         figure.update_yaxes(title="P", showgrid=False, zeroline=False, row=2, col=1)
         figure.update_layout(showlegend=False)
         return figure
