@@ -254,13 +254,17 @@ class IMR:
     """
 
     def __init__(self, data: list) -> None:
+        self.data = data
+
+    @property
+    def mr(self) -> list:
+        indexes = range(1, len(self.data))
         func = lambda i: abs(data[i] - data[i - 1])
-        self.i = data
-        self.mr = list(map(func, range(1, len(data))))
+        return list(map(func, indexes))
 
     @property
     def center_line_i(self) -> float:
-        return mean(self.i)
+        return mean(self.data)
 
     @property
     def center_line_mr(self) -> float:
@@ -268,11 +272,11 @@ class IMR:
 
     @property
     def lower_control_limit_i(self) -> float:
-        return self.center_line_i - (3 * stdev(self.i))
+        return self.center_line_i - (3 * stdev(self.data))
 
     @property
     def upper_control_limit_i(self) -> float:
-        return self.center_line_i + (3 * stdev(self.i))
+        return self.center_line_i + (3 * stdev(self.data))
 
     @property
     def lower_control_limit_mr(self) -> float:
@@ -294,8 +298,8 @@ class IMR:
         figure.add_hline(y=self.lower_control_limit_i, name="LCL", row=1, col=1)
         figure.add_hline(y=self.upper_control_limit_i, name="UCL", row=1, col=1)
         figure.add_scatter(
-            x=list(range(len(self.i))),
-            y=self.i,
+            x=list(range(len(self.data))),
+            y=self.data,
             mode="lines+markers",
             row=1,
             col=1,
