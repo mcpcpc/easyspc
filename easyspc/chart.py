@@ -365,9 +365,9 @@ class P:
     def lower_control_limit(self) -> list | float:
         p_bar = self.center_line
         if isinstance(self.sample_sizes, (float | int)):
-            return p_bar - (3 * (
+            return p_bar - 3 * (
                 p_bar * (1 - p_bar)
-            ) ** (.5)) / (self.sample_sizes ** (.5))
+            ) ** (.5) / (self.sample_sizes ** (.5))
         func = lambda n: p_bar - (3 * (
             p_bar * (1 - p_bar)
         ) ** (.5)) / (n ** (.5))
