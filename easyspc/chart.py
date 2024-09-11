@@ -127,18 +127,6 @@ class XBarR:
         figure.update_layout(showlegend=False)
         return figure
 
-    def summary(self) -> None:
-        print("X-Bar Chart Summary:")
-        print(f"Center Line (CL): {self.center_line_x:.3f}")
-        print(f"Upper Control Limit (UCL): {self.upper_control_limit_x:.3f}")
-        print(f"Lower Control Limit (UCL): {self.lower_control_limit_x:.3f}")
-        print(f"Number of Subgroups: {len(self.x_bar)}")
-        print("R Chart Summary:")
-        print(f"Center Line (CL): {self.center_line_r:.3f}")
-        print(f"Upper Control Limit (UCL): {self.upper_control_limit_r:.3f}")
-        print(f"Lower Control Limit (UCL): {self.lower_control_limit_r:.3f}")
-        print(f"Number of Subgroups: {len(self.r_bar)}")
-
 
 class XBarS:
     """XBar-S Chart.
@@ -243,18 +231,6 @@ class XBarS:
         figure.update_layout(showlegend=False)
         return figure
 
-    def summary(self) -> None:
-        print("X-Bar Chart Summary:")
-        print(f"Center Line (CL): {self.center_line_x:.3f}")
-        print(f"Upper Control Limit (UCL): {self.upper_control_limit_x:.3f}")
-        print(f"Lower Control Limit (UCL): {self.lower_control_limit_x:.3f}")
-        print(f"Number of Subgroups: {len(self.x_bar)}")
-        print("S Chart Summary:")
-        print(f"Center Line (CL): {self.center_line_s:.3f}")
-        print(f"Upper Control Limit (UCL): {self.upper_control_limit_s:.3f}")
-        print(f"Lower Control Limit (UCL): {self.lower_control_limit_s:.3f}")
-        print(f"Number of Subgroups: {len(self.s_bar)}")
-
 
 class IMR:
     """I-MR Chart.
@@ -344,16 +320,6 @@ class IMR:
         figure.update_layout(showlegend=False)
         return figure
 
-    def summary(self) -> None:
-        print("I Chart Summary:")
-        print(f"Center Line (CL): {self.center_line_i:.3f}")
-        print(f"Upper Control Limit (UCL): {self.upper_control_limit_i:.3f}")
-        print(f"Lower Control Limit (UCL): {self.lower_control_limit_i:.3f}")
-        print("MR Summary:")
-        print(f"Center Line (CL): {self.center_line_s:.3f}")
-        print(f"Upper Control Limit (UCL): {self.upper_control_limit_mr:.3f}")
-        print(f"Lower Control Limit (UCL): {self.lower_control_limit_mr:.3f}")
-
 
 class P:
     """Proportion (P) chart.
@@ -420,10 +386,3 @@ class P:
         figure.update_yaxes(title="P", showgrid=False, zeroline=False, row=2, col=1)
         figure.update_layout(showlegend=False)
         return figure
-
-    def summary(self) -> None:
-        print("P Chart Summary:")
-        print(f"Center Line (CL): {self.center_line:.3f}")
-        print(f"Upper Control Limit (UCL): {max(self.upper_control_limit):.3f}")
-        print(f"Lower Control Limit (UCL): {min(self.lower_control_limit):.3f}")
-        print(f"Number of Samples: {len(self.p)}")
