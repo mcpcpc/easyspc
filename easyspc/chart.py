@@ -399,6 +399,6 @@ def __init__(
     def summary(self) -> None:
         print("P Chart Summary:")
         print(f"Center Line (CL): {self.center_line:.3f}")
-        print(f"Upper Control Limit (UCL): {max(self.upper_control_limit:.3f}")
-        print(f"Lower Control Limit (UCL): {min(self.lower_control_limit:.3f}")
+        print(f"Upper Control Limit (UCL): {max(self.upper_control_limit):.3f}")
+        print(f"Lower Control Limit (UCL): {min(self.lower_control_limit):.3f}")
         print(f"Number of Samples: {len(self.p)}")
