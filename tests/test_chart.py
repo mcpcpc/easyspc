@@ -126,9 +126,15 @@ class ChartTestCase(TestCase):
         response = chart.lower_control_limit_s
         self.assertIsInstance(response, (float, int))
 
+    def test_p_center_line(self):
+        defects = list(range(9))
+        chart = P(defects, sample_sizes=1)
+        response = chart.center_line
+        self.assertIsInstance(response, (float, int))
+
     def test_p_lower_control_limit_constant_size(self):
         defects = list(range(9))
-        chart = P(defects, sample_sizes=3)
+        chart = P(defects, sample_sizes=1)
         response = chart.lower_control_limit
         self.assertIsInstance(response, (float, int))
 
