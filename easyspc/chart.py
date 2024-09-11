@@ -49,7 +49,7 @@ class XBarR:
         groups = list(batched(self.data, n))
         return list(map(mean, groups))
 
-    def r(self) -> list: 
+    def r(self) -> list:
         n = self.subgroup_size
         groups = list(batched(self.data, n))
         func = lambda v: max(v) - min(v)
@@ -195,7 +195,7 @@ class XBarS:
         center_line_s = self.center_line_s()
         return center_line_x + (A3 * center_line_s)
 
-    def lower_control_limit_s(self) -> float: 
+    def lower_control_limit_s(self) -> float:
         B3 = abc_table[self.subgroup_size].B3
         center_line_s = self.center_line_s()
         return B3 * center_line_s
