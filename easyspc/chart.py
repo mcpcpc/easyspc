@@ -57,7 +57,7 @@ class XBarR:
 
     def center_line_x(self) -> float:
         x_bar = self.x_bar()
-        return mean(self.x_bar)
+        return mean(x_bar)
 
     def center_line_r(self) -> float:
         r = self.r()
