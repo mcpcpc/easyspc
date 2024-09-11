@@ -340,13 +340,13 @@ class P:
     instabilities in a process.
     """
 
-def __init__(
-    self,
-    defects: list,
-    sample_sizes: list | int, 
-) -> None:
-    self.defects = defects
-    self.sample_sizes = sample_sizes
+    def __init__(
+        self,
+        defects: list,
+        sample_sizes: list | int, 
+    ) -> None:
+        self.defects = defects
+        self.sample_sizes = sample_sizes
  
     @property
     def p(self) -> list | float | int:
