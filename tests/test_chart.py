@@ -145,5 +145,19 @@ class ChartTestCase(TestCase):
         response = chart.lower_control_limit
         self.assertIsInstance(response, list)
 
+    def test_p_upper_control_limit_constant_size(self):
+        defects = list(range(9))
+        chart = P(defects, sample_sizes=1)
+        response = chart.upper_control_limit
+        self.assertIsInstance(response, (float, int))
+
+    def test_p_upper_control_limit_variable_size(self):
+        defects = list(range(9))
+        sizes = [1,] * 9
+        chart = P(defects, sample_sizes=sizes)
+        response = chart.upper_control_limit
+        self.assertIsInstance(response, list)
+
+
 if __name__ == "__main__":
     main()
