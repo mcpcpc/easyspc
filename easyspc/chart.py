@@ -164,15 +164,24 @@ class XBarS:
     ) -> None:
         self.data = data
         self.subgroup_size = subgroup_size
-        groups = list(batched(data, n=subgroup_size))
-        self.x_bar = list(map(mean, groups))
-        self.s = list(map(stdev, groups))
+
+    def x_bar(self) -> list:
+        n = self.subgroup_size
+        groups = list(batched(self.data, n))
+        return list(map(mean, groups))
+
+    def s(self) -> list:
+        n = self.subgroup_size
+        groups = list(batched(self.data, n))
+        return list(map(stdev, groups))
 
     def center_line_x(self) -> float:
-        return mean(self.x_bar)
+        x_bar = self.x_bar()
+        return mean(x_bar)
 
     def center_line_s(self) -> float:
-        return mean(self.s)
+        s = self.s()
+        return mean(s)
 
     def lower_control_limit_x(self) -> float:
         A3 = abc_table[self.subgroup_size].A3
@@ -205,15 +214,18 @@ class XBarS:
     def cpk(self, lsl: float, usl: float) -> float:
         C4 = abc_table[self.subgroup_size].C4
         center_line_s = center_line_s()
-        sigma = self.center_line_s / C4
-        cpk_upper = (usl - self.x_bar) / (3 * sigma)
-        cpk_lower = (self.x_bar - lsl) / (3 * sigma)
+        x_bar = self.x_bar()
+        sigma = center_line_s / C4
+        cpk_upper = (usl - x_bar) / (3 * sigma)
+        cpk_lower = (x_bar - lsl) / (3 * sigma)
         return min((cpk_upper, cpk_lower))
 
     def plot(self) -> Figure:
+        x_bar = self.x_bar()
         cl_x = self.center_line_x()
         lcl_x = self.lower_control_limit_x()
         ucl_x = self.upper_control_limit_x()
+        s = self.s()
         cl_s = self.center_line_s()
         lcl_s = self.lower_control_limit_s()
         ucl_s = self.upper_control_limit_s()
@@ -222,8 +234,8 @@ class XBarS:
         figure.add_hline(y=lcl_x, name="LCL", row=1, col=1)
         figure.add_hline(y=ucl_x, name="UCL", row=1, col=1)
         figure.add_scatter(
-            x=list(range(len(self.x_bar))),
-            y=self.x_bar,
+            x=list(range(len(x_bar))),
+            y=x_bar,
             mode="lines+markers",
             row=1,
             col=1,
@@ -238,8 +250,8 @@ class XBarS:
         figure.add_hline(y=lcl_s, name="S_LCL", row=2, col=1)
         figure.add_hline(y=ucl_s, name="S_UCL", row=2, col=1)
         figure.add_scatter(
-            x=list(range(len(self.s))),
-            y=self.s,
+            x=list(range(len(s))),
+            y=s,
             mode="lines+markers",
             row=2,
             col=1,
